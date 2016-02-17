@@ -1,0 +1,20 @@
+CREATE TABLE `Sys_User` (
+  `User_Code` varchar(30) NOT NULL COMMENT '人员编码',
+  `User_Name` varchar(100) DEFAULT NULL COMMENT '人员名称',
+  `Corp_Code` varchar(30) DEFAULT NULL COMMENT '公司编号',
+  `Organize_Code` varchar(30) DEFAULT NULL COMMENT '部门编码',
+  `Identification_Type` varchar(30) DEFAULT NULL COMMENT '证件类型',
+  `Identification_Id` varchar(30) DEFAULT NULL COMMENT '证件号',
+  `User_Telephone` varchar(50) DEFAULT NULL COMMENT '手机',
+  `User_email` varchar(30) DEFAULT NULL COMMENT'邮件地址',
+  `Is_Active` varchar(20) DEFAULT NULL COMMENT '是否激活',
+  `User_Password` varchar(100) DEFAULT NULL COMMENT 'md5 hash',
+  `User_salt` varchar(100) DEFAULT NULL COMMENT 'salt，用于数据加密',
+   `token` varchar(1000) DEFAULT NULL COMMENT'token',
+  `Mem` varchar(2000) DEFAULT NULL COMMENT '备注',
+  `Ur_Create` varchar(30) DEFAULT NULL COMMENT '创建者',
+  `Date_Create` datetime DEFAULT NULL COMMENT '创建时间',
+  `Ur_Alter` varchar(30) DEFAULT NULL COMMENT '修改者',
+  `Date_Alter` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`User_Code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='人员表';

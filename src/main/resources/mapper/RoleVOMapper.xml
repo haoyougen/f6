@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.f6.daos.RoleVOMapper" >
+  <resultMap id="BaseResultMap" type="com.f6.vo.RoleVO" >
+    <id column="Role_Code" property="roleCode" jdbcType="VARCHAR" />
+    <result column="Role_Name" property="roleName" jdbcType="VARCHAR" />
+    <result column="Mem" property="mem" jdbcType="VARCHAR" />
+    <result column="Ur_Create" property="urCreate" jdbcType="VARCHAR" />
+    <result column="Date_Create" property="dateCreate" jdbcType="TIMESTAMP" />
+    <result column="Ur_Alter" property="urAlter" jdbcType="VARCHAR" />
+    <result column="Date_Alter" property="dateAlter" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    Role_Code, Role_Name, Mem, Ur_Create, Date_Create, Ur_Alter, Date_Alter
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_role
+    where Role_Code = #{roleCode,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_role
+    where Role_Code = #{roleCode,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.f6.vo.RoleVO" >
+    insert into sys_role (Role_Code, Role_Name, Mem, 
+      Ur_Create, Date_Create, Ur_Alter, 
+      Date_Alter)
+    values (#{roleCode,jdbcType=VARCHAR}, #{roleName,jdbcType=VARCHAR}, #{mem,jdbcType=VARCHAR}, 
+      #{urCreate,jdbcType=VARCHAR}, #{dateCreate,jdbcType=TIMESTAMP}, #{urAlter,jdbcType=VARCHAR}, 
+      #{dateAlter,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.f6.vo.RoleVO" >
+    insert into sys_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="roleCode != null" >
+        Role_Code,
+      </if>
+      <if test="roleName != null" >
+        Role_Name,
+      </if>
+      <if test="mem != null" >
+        Mem,
+      </if>
+      <if test="urCreate != null" >
+        Ur_Create,
+      </if>
+      <if test="dateCreate != null" >
+        Date_Create,
+      </if>
+      <if test="urAlter != null" >
+        Ur_Alter,
+      </if>
+      <if test="dateAlter != null" >
+        Date_Alter,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="roleCode != null" >
+        #{roleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="roleName != null" >
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="mem != null" >
+        #{mem,jdbcType=VARCHAR},
+      </if>
+      <if test="urCreate != null" >
+        #{urCreate,jdbcType=VARCHAR},
+      </if>
+      <if test="dateCreate != null" >
+        #{dateCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="urAlter != null" >
+        #{urAlter,jdbcType=VARCHAR},
+      </if>
+      <if test="dateAlter != null" >
+        #{dateAlter,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.f6.vo.RoleVO" >
+    update sys_role
+    <set >
+      <if test="roleName != null" >
+        Role_Name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="mem != null" >
+        Mem = #{mem,jdbcType=VARCHAR},
+      </if>
+      <if test="urCreate != null" >
+        Ur_Create = #{urCreate,jdbcType=VARCHAR},
+      </if>
+      <if test="dateCreate != null" >
+        Date_Create = #{dateCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="urAlter != null" >
+        Ur_Alter = #{urAlter,jdbcType=VARCHAR},
+      </if>
+      <if test="dateAlter != null" >
+        Date_Alter = #{dateAlter,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where Role_Code = #{roleCode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.f6.vo.RoleVO" >
+    update sys_role
+    set Role_Name = #{roleName,jdbcType=VARCHAR},
+      Mem = #{mem,jdbcType=VARCHAR},
+      Ur_Create = #{urCreate,jdbcType=VARCHAR},
+      Date_Create = #{dateCreate,jdbcType=TIMESTAMP},
+      Ur_Alter = #{urAlter,jdbcType=VARCHAR},
+      Date_Alter = #{dateAlter,jdbcType=TIMESTAMP}
+    where Role_Code = #{roleCode,jdbcType=VARCHAR}
+  </update>
+</mapper>

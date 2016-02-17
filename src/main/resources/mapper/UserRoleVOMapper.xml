@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.f6.daos.UserRoleVOMapper" >
+  <resultMap id="BaseResultMap" type="com.f6.vo.UserRoleVO" >
+    <id column="User_Code" property="userCode" jdbcType="VARCHAR" />
+    <id column="Corp_Code" property="corpCode" jdbcType="VARCHAR" />
+    <id column="Role_Code" property="roleCode" jdbcType="VARCHAR" />
+    <result column="Mem" property="mem" jdbcType="VARCHAR" />
+    <result column="Ur_Create" property="urCreate" jdbcType="VARCHAR" />
+    <result column="Date_Create" property="dateCreate" jdbcType="TIMESTAMP" />
+    <result column="Ur_Alter" property="urAlter" jdbcType="VARCHAR" />
+    <result column="Date_Alter" property="dateAlter" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    User_Code, Corp_Code, Role_Code, Mem, Ur_Create, Date_Create, Ur_Alter, Date_Alter
+  </sql>
+  <select id="selectRolesByUserID" resultType="java.util.Map" parameterType="java.util.Map" >
+   select ur.role_code from sys_user user ,sys_user_role ur
+where user.User_Code=ur.Role_Code and user.Identification_Id=#{userCode,jdbcType=VARCHAR}
+  </select>
+  
+  <insert id="insert" parameterType="com.f6.vo.UserRoleVO" >
+    insert into sys_user_role (User_Code, Corp_Code, Role_Code, 
+      Mem, Ur_Create, Date_Create, 
+      Ur_Alter, Date_Alter)
+    values (#{userCode,jdbcType=VARCHAR}, #{corpCode,jdbcType=VARCHAR}, #{roleCode,jdbcType=VARCHAR}, 
+      #{mem,jdbcType=VARCHAR}, #{urCreate,jdbcType=VARCHAR}, #{dateCreate,jdbcType=TIMESTAMP}, 
+      #{urAlter,jdbcType=VARCHAR}, #{dateAlter,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.f6.vo.UserRoleVO" >
+    insert into sys_user_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userCode != null" >
+        User_Code,
+      </if>
+      <if test="corpCode != null" >
+        Corp_Code,
+      </if>
+      <if test="roleCode != null" >
+        Role_Code,
+      </if>
+      <if test="mem != null" >
+        Mem,
+      </if>
+      <if test="urCreate != null" >
+        Ur_Create,
+      </if>
+      <if test="dateCreate != null" >
+        Date_Create,
+      </if>
+      <if test="urAlter != null" >
+        Ur_Alter,
+      </if>
+      <if test="dateAlter != null" >
+        Date_Alter,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userCode != null" >
+        #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="corpCode != null" >
+        #{corpCode,jdbcType=VARCHAR},
+      </if>
+      <if test="roleCode != null" >
+        #{roleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="mem != null" >
+        #{mem,jdbcType=VARCHAR},
+      </if>
+      <if test="urCreate != null" >
+        #{urCreate,jdbcType=VARCHAR},
+      </if>
+      <if test="dateCreate != null" >
+        #{dateCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="urAlter != null" >
+        #{urAlter,jdbcType=VARCHAR},
+      </if>
+      <if test="dateAlter != null" >
+        #{dateAlter,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.f6.vo.UserRoleVO" >
+    update sys_user_role
+    <set >
+      <if test="mem != null" >
+        Mem = #{mem,jdbcType=VARCHAR},
+      </if>
+      <if test="urCreate != null" >
+        Ur_Create = #{urCreate,jdbcType=VARCHAR},
+      </if>
+      <if test="dateCreate != null" >
+        Date_Create = #{dateCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="urAlter != null" >
+        Ur_Alter = #{urAlter,jdbcType=VARCHAR},
+      </if>
+      <if test="dateAlter != null" >
+        Date_Alter = #{dateAlter,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where User_Code = #{userCode,jdbcType=VARCHAR}
+      and Corp_Code = #{corpCode,jdbcType=VARCHAR}
+      and Role_Code = #{roleCode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.f6.vo.UserRoleVO" >
+    update sys_user_role
+    set Mem = #{mem,jdbcType=VARCHAR},
+      Ur_Create = #{urCreate,jdbcType=VARCHAR},
+      Date_Create = #{dateCreate,jdbcType=TIMESTAMP},
+      Ur_Alter = #{urAlter,jdbcType=VARCHAR},
+      Date_Alter = #{dateAlter,jdbcType=TIMESTAMP}
+    where User_Code = #{userCode,jdbcType=VARCHAR}
+      and Corp_Code = #{corpCode,jdbcType=VARCHAR}
+      and Role_Code = #{roleCode,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties resource="mybatis.properties" />
+	<settings>
+		<setting name="cacheEnabled" value="false" />
+		<!-- mybatis开启数据库字段自动映射驼峰命名规则java属性 -->
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+	</settings>
+
+	<typeAliases>
+		<typeAlias alias="User" type="com.f6.auth.domain.UserVO" />
+	</typeAliases>
+	<plugins>
+		<plugin interceptor="com.f6.interceptor.mybatis.CameHumpInterceptor"></plugin>
+		<plugin interceptor="com.f6.interceptor.mybatis.PerformanceInterceptor"></plugin>
+	</plugins>
+</configuration>

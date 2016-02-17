@@ -1,0 +1,12 @@
+CREATE TABLE `Sys_Priviledge` (
+  `Res_Code` varchar(30) NOT NULL,
+  `Role_Code` varchar(30) NOT NULL,
+  `Permission` varchar(20) DEFAULT NULL,
+  `Res_Type` varchar(20) DEFAULT NULL,
+  `Res_Content` varchar(200) DEFAULT NULL,
+  `Mem` varchar(200) DEFAULT NULL,
+  `Ur_Create` varchar(30) DEFAULT NULL,
+  `Date_Create` datetime DEFAULT NULL,
+  `Ur_Alter` varchar(30) DEFAULT NULL,
+  `Date_Alter` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

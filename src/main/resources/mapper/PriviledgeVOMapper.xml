@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.f6.daos.PriviledgeVOMapper" >
+  <resultMap id="BaseResultMap" type="com.f6.vo.PriviledgeVO" >
+    <result column="Res_Code" property="resCode" jdbcType="VARCHAR" />
+    <result column="Role_Code" property="roleCode" jdbcType="VARCHAR" />
+    <result column="Permission" property="permission" jdbcType="VARCHAR" />
+    <result column="Res_Type" property="resType" jdbcType="VARCHAR" />
+    <result column="Res_Content" property="resContent" jdbcType="VARCHAR" />
+    <result column="Mem" property="mem" jdbcType="VARCHAR" />
+    <result column="Ur_Create" property="urCreate" jdbcType="VARCHAR" />
+    <result column="Date_Create" property="dateCreate" jdbcType="TIMESTAMP" />
+    <result column="Ur_Alter" property="urAlter" jdbcType="VARCHAR" />
+    <result column="Date_Alter" property="dateAlter" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <insert id="insert" parameterType="com.f6.vo.PriviledgeVO" >
+    insert into sys_priviledge (Res_Code, Role_Code, Permission, 
+      Res_Type, Res_Content, Mem, 
+      Ur_Create, Date_Create, Ur_Alter, 
+      Date_Alter)
+    values (#{resCode,jdbcType=VARCHAR}, #{roleCode,jdbcType=VARCHAR}, #{permission,jdbcType=VARCHAR}, 
+      #{resType,jdbcType=VARCHAR}, #{resContent,jdbcType=VARCHAR}, #{mem,jdbcType=VARCHAR}, 
+      #{urCreate,jdbcType=VARCHAR}, #{dateCreate,jdbcType=TIMESTAMP}, #{urAlter,jdbcType=VARCHAR}, 
+      #{dateAlter,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.f6.vo.PriviledgeVO" >
+    insert into sys_priviledge
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="resCode != null" >
+        Res_Code,
+      </if>
+      <if test="roleCode != null" >
+        Role_Code,
+      </if>
+      <if test="permission != null" >
+        Permission,
+      </if>
+      <if test="resType != null" >
+        Res_Type,
+      </if>
+      <if test="resContent != null" >
+        Res_Content,
+      </if>
+      <if test="mem != null" >
+        Mem,
+      </if>
+      <if test="urCreate != null" >
+        Ur_Create,
+      </if>
+      <if test="dateCreate != null" >
+        Date_Create,
+      </if>
+      <if test="urAlter != null" >
+        Ur_Alter,
+      </if>
+      <if test="dateAlter != null" >
+        Date_Alter,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="resCode != null" >
+        #{resCode,jdbcType=VARCHAR},
+      </if>
+      <if test="roleCode != null" >
+        #{roleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="permission != null" >
+        #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="resType != null" >
+        #{resType,jdbcType=VARCHAR},
+      </if>
+      <if test="resContent != null" >
+        #{resContent,jdbcType=VARCHAR},
+      </if>
+      <if test="mem != null" >
+        #{mem,jdbcType=VARCHAR},
+      </if>
+      <if test="urCreate != null" >
+        #{urCreate,jdbcType=VARCHAR},
+      </if>
+      <if test="dateCreate != null" >
+        #{dateCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="urAlter != null" >
+        #{urAlter,jdbcType=VARCHAR},
+      </if>
+      <if test="dateAlter != null" >
+        #{dateAlter,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>

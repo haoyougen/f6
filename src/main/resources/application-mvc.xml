@@ -1,0 +1,142 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd  
+		http://www.springframework.org/schema/cache 
+        http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+	<mvc:annotation-driven></mvc:annotation-driven>
+
+	<!-- 静态资源映射 -->
+ 
+	<mvc:resources mapping="/static/**" location="/static/" />
+
+
+	<!-- 默认访问跳转到登录页面(即定义无需Controller的url<->view直接映射) -->
+	<mvc:view-controller path="/" view-name="forward:/index" />
+
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+	<bean class="com.f6.interceptor.LogAspect" />
+
+	<mvc:interceptors>
+		<!-- 国际化操作拦截器 如果采用基于（请求/Session/Cookie）则必需配置 -->
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
+
+
+	</mvc:interceptors>
+
+
+
+	<!-- 内容协商管理器 -->
+	<!--1、首先检查路径扩展名（如my.pdf）；2、其次检查Parameter（如my?format=pdf）；3、检查Accept Header -->
+	<bean id="contentNegotiationManager"
+		class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+		<!-- 扩展名至mimeType的映射,即 /user.json => application/json -->
+		<property name="favorPathExtension" value="true" />
+		<!-- 用于开启 /userinfo/123?format=json 的支持 -->
+		<property name="favorParameter" value="true" />
+		<property name="parameterName" value="format" />
+		<!-- 是否忽略Accept Header -->
+		<property name="ignoreAcceptHeader" value="false" />
+
+		<property name="mediaTypes"> <!--扩展名到MIME的映射；favorPathExtension, favorParameter是true时起作用 -->
+			<value>
+				json=application/json
+				xml=application/xml
+				html=text/html
+			</value>
+		</property>
+		<!-- 默认的content type -->
+		<property name="defaultContentType" value="text/html" />
+	</bean>
+
+
+	<!-- ========================= VIEW定义 ========================= -->
+	<!-- 内容协商视图解析器；根据客户端的不同的请求决定不同的 view进行响应, 如 /blog/1.json /blog/1.xml -->
+	<!-- 会自动根据解析的contentType来决定使用哪个视图解析器（默认使用整个web应用中的viewResolver） -->
+	<bean
+		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver"
+		p:order="0">
+		<!-- 内容协商管理器 用于决定media type -->
+		<property name="contentNegotiationManager" ref="contentNegotiationManager" />
+		<!-- 默认视图 放在解析链最后 -->
+		<property name="defaultViews">
+			<list>
+				<!--<bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"/> -->
+				<bean class="com.alibaba.fastjson.support.spring.FastJsonJsonView" />
+				<!--<bean class="org.springframework.web.servlet.view.xml.MarshallingView"/> -->
+			</list>
+		</property>
+	</bean>
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
+		in the /WEB-INF/views directory -->
+	<bean id="defaultViewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- 配置多文件上传 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding">
+			<value>UTF-8</value>
+		</property>
+		<property name="maxUploadSize">
+			<!-- 上传文件大小限制为31M，31*1024*1024 -->
+			<value>32505856</value>
+		</property>
+		<property name="maxInMemorySize">
+			<value>4096</value>
+		</property>
+	</bean>
+
+
+
+	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver"
+		p:order="10"></bean>
+
+
+	<bean id="exceptionResolver"
+		class="com.f6.exceptions.handler.MySimpleMappingExceptionResolver">
+		<property name="defaultErrorView" value="error"></property>
+		<property name="exceptionAttribute" value="ex"></property>
+		<property name="warnLogCategory" value="WARN"></property>
+		<property name="exceptionMappings">
+			<props>
+				<prop key="com.f6.exceptions.BusinessException">error-business</prop>
+				<prop key="com.f6.exceptions.BadParameterException">error-parameter</prop>
+				<prop key="org.apache.shiro.authc.AuthenticationException">authen</prop>
+				<prop key="org.apache.shiro.session.UnknownSessionException">sessiontimeout</prop>
+			</props>
+		</property>
+		<property name="statusCodes">
+			<props>
+				<prop key="error/500">500</prop>
+				<prop key="error/404">404</prop>
+				<prop key="error/401">401</prop>
+			</props>
+		</property>
+	</bean>
+	<context:component-scan base-package="com.f6">
+		<context:include-filter type="regex"
+			expression="com\.f6\.[controller service dao util]\.\.*" />
+	</context:component-scan>
+
+
+	<!-- 启用shrio授权注解拦截方式 -->
+	<aop:config proxy-target-class="true"></aop:config>
+ 
+
+</beans>
