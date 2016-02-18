@@ -34,11 +34,9 @@ public abstract class BaseController {
 	@Autowired
 	private CommonService commonservice;
 
-	public abstract void authenticate(HttpServletRequest requset, HttpServletResponse response)
-			throws AuthenticationException;
+	public abstract void authenticate(HttpServletRequest requset, HttpServletResponse response) throws AuthenticationException;
 
-	public abstract void dataValidate(HttpServletRequest requset, HttpServletResponse response)
-			throws BadParameterException;
+	public abstract void dataValidate(HttpServletRequest requset, HttpServletResponse response) throws BadParameterException;
 
 	public abstract void postProcess(HttpServletRequest requset, HttpServletResponse response);
 
@@ -63,17 +61,36 @@ public abstract class BaseController {
 		}
 	}
 
-	public abstract String query(Map paramap, HttpServletRequest requset, HttpServletResponse reponse)
-			throws BusinessException;
+	public abstract String query(Map paramap, HttpServletRequest requset, HttpServletResponse reponse) throws BusinessException;
 
-	@RequestMapping(value = DispatherConstant.LOGOUT, method = RequestMethod.POST)
+	@RequestMapping(value = DispatherConstant.LOGOUT, method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	public Map logout(HttpServletRequest req, HttpServletResponse res) {
 
 		logger.info("*************************logout successful****************************");
 		return F6WebUtil.buildResponseMap(SystemConstans.RESPONSE_LABEL_SUCCESS, "", "logout successful");
 	}
 
-	@RequestMapping(value = DispatherConstant.LOGIN, method = RequestMethod.POST)
+	@RequestMapping(value = DispatherConstant.REG, method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public Map reg(@RequestBody Map<String, String> param, RedirectAttributes attrs, HttpServletRequest request)
+			throws AuthenticationException, BusinessException {
+	  String userPassword1=  param.get("userPassword1");
+	  String userPassword2=  param.get("userPassword2");
+	  if(F6SystemUtils.isStrNull(userPassword1)||F6SystemUtils.isStrNull(userPassword2)||!userPassword1.equals(userPassword2)){
+		  throw new AuthenticationException("两次密码输入不一致");
+	  }
+		param.put("userPassword", PasswordHelper.encryptString(userPassword1));
+	  
+		DBParameter dbparameter = F6SystemUtils.buildDBParameter("UserVO", "insert", param);
+		Map dbresult = commonservice.change(dbparameter, SystemConstans.CHANGE_ACTION_INSERT);
+		dbresult.put("userPassword", "");
+		dbresult.put("userPassword1", "");
+		dbresult.put("userPassword2", "");
+		
+		return F6WebUtil.buildResponseMap(SystemConstans.RESPONSE_LABEL_SUCCESS, dbresult, "reg successful");
+	}
+
+	@RequestMapping(value = DispatherConstant.LOGIN, method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	@ResponseBody
 	public Map login(@RequestBody UserVO uservo, RedirectAttributes attrs, HttpServletRequest request)
 			throws AuthenticationException, BusinessException {
@@ -97,8 +114,7 @@ public abstract class BaseController {
 		} else {
 			String dbpwd = (String) dbresult.get("password");
 			if (F6SystemUtils.isStrNull(dbpwd) || !encryptedpwd.equals(dbpwd)) {
-				return F6WebUtil.buildResponseMap(SystemConstans.RESPONSE_LABEL_NOAUTH, "",
-						SystemConstans.ERROR_USER_PWD);
+				return F6WebUtil.buildResponseMap(SystemConstans.RESPONSE_LABEL_NOAUTH, "", SystemConstans.ERROR_USER_PWD);
 			}
 
 		}
@@ -113,7 +129,7 @@ public abstract class BaseController {
 		tokenparam.put("userid", username);
 		tokenparam.put("token", token);
 
-		DBParameter dbparameter = F6SystemUtils.buildDBParameter("TokenVOMapper", "updateToken", tokenparam);
+		DBParameter dbparameter = F6SystemUtils.buildDBParameter("TokenVO", "updateToken", tokenparam);
 		commonservice.change(dbparameter, SystemConstans.CHANGE_ACTION_UPDATE);
 
 		return F6WebUtil.buildResponseMap(SystemConstans.RESPONSE_LABEL_SUCCESS, resultvo, "");

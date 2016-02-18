@@ -8,6 +8,7 @@ public class DispatherConstant {
     public static final String PUBLIC = "/pub";
     public static final String CLIENT = "/client";
     public static final String LOGIN = "/secure/login";
+    public static final String REG = "/secure/reg";
     public static final String AGENCY_HOME = "/myagency";
     public static final String LOGOUT = "/secure/logout";
     public static final String ORGANIZATION = "/org";

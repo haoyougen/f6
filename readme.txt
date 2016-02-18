@@ -1,0 +1,2 @@
+简介
+一个spring+mybatis+mysql的工程脚手架

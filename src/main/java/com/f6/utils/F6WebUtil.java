@@ -248,6 +248,7 @@ public class F6WebUtil {
 			// BtmuParamVO paramvo = (BtmuParamVO) JSON.parse(sb.toString());
 
 			JSONObject jsonobject = JSON.parseObject(sb.toString());
+			if(jsonobject!=null)
 			propertyValue = (String) jsonobject.getString(propertyName);
 
 		} catch (Exception e) {

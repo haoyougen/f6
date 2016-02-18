@@ -11,7 +11,7 @@
     http://www.springframework.org/schema/context/spring-context.xsd
     http://www.springframework.org/schema/tx
     http://www.springframework.org/schema/tx/spring-tx.xsd 
-    http://www.springframework.org/schema/cache
+    http://www.springframework.org/fschema/cache
     http://www.springframework.org/schema/cache/spring-cache.xsd
     http://www.springframework.org/schema/aop
     http://www.springframework.org/schema/aop/spring-aop.xsd
@@ -169,7 +169,9 @@
 	<bean id="filter_mainfilter" class="com.f6.filters.MainFilter">
 		<property name="exclusiveurl">
 			<list>
-				<value>/login</value>
+				<value>/secure/login</value>
+				<value>/secure/logout</value>
+				<value>/secure/reg</value>
 			</list>
 		</property>
 	</bean>

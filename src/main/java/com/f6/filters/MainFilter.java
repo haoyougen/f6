@@ -49,13 +49,13 @@ public class MainFilter implements Filter {
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException {
-		logger.info("进入filter");
+		
 		try {
 			F6HttpRequestWrapper f6request = new F6HttpRequestWrapper((HttpServletRequest) request);
 			String functionid = F6WebUtil.getRequestProperty(f6request, SystemConstans.PARAM_FUNCTION_ID);
 			// check function id
 			if (F6SystemUtils.isStrNull(functionid)) {
-				F6WebUtil.buildErrorResponse((HttpServletResponse) response, SystemConstans.ERROR_BAD_REQUEST, "");
+				F6WebUtil.buildErrorResponse((HttpServletResponse) response,SystemConstans.RESPONSE_LABEL_NOAUTH,SystemConstans.ERROR_BAD_REQUEST);
 				return;
 			}
 			//
@@ -63,19 +63,21 @@ public class MainFilter implements Filter {
 			String requesturl = ((HttpServletRequest) request).getRequestURI();
 
 			String requestURL = requesturl.substring(contextpath.length());
-
+			logger.info("您正在访问："+requestURL);
 			if (!exclusiveurl.contains(requestURL)) {
 				boolean isauthorized = accessAuthenticate((HttpServletRequest) request, functionid);
 				if (!isauthorized) {
-					F6WebUtil.buildErrorResponse((HttpServletResponse) response, SystemConstans.ERROR_NOT_AUTH, "");
+					F6WebUtil.buildErrorResponse((HttpServletResponse) response,SystemConstans.RESPONSE_LABEL_NOAUTH,SystemConstans.ERROR_NOT_AUTH);
 					return;
 				}
+			}else{
+				logger.info(requestURL+"已存在白名单");
 			}
 			logger.info(contextpath + "===" + requestURL);
 
 			chain.doFilter(f6request, response);
 		} catch (Exception e) {
-			F6WebUtil.buildErrorResponse((HttpServletResponse) response, SystemConstans.SYSTEM_ERROR, "");
+			F6WebUtil.buildErrorResponse((HttpServletResponse) response,SystemConstans.RESPONSE_LABEL_ERROR,SystemConstans.SYSTEM_ERROR);
 		}
 	}
 

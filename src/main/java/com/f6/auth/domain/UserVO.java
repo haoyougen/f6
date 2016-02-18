@@ -1,10 +1,12 @@
 package com.f6.auth.domain;
 
+import java.io.Serializable;
+
 /**
  * @author Administrator
  *
  */
-public class UserVO {
+public class UserVO implements Serializable{
 	private String userCode;
  
 	private String userName;
