@@ -15,8 +15,9 @@
     http://www.springframework.org/schema/cache/spring-cache.xsd
     http://www.springframework.org/schema/aop
     http://www.springframework.org/schema/aop/spring-aop.xsd
-  http://www.springframework.org/schema/jee
-  http://www.springframework.org/schema/jee/spring-jee.xsd">
+    http://www.springframework.org/schema/jee
+    http://www.springframework.org/schema/jee/spring-jee.xsd">
+    
 	<!-- open message converter -->
 	<mvc:annotation-driven />
 	<!-- load jdbc.properties -->

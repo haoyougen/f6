@@ -1,15 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>william</groupId>
-  <artifactId>f6</artifactId>
-  <packaging>war</packaging>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>f6 Maven Webapp</name>
-  <url>http://maven.apache.org</url>
-<properties>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>william</groupId>
+	<artifactId>f6</artifactId>
+	<packaging>war</packaging>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>f6 Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+	<properties>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
-		<org.springframework-version>4.2.1.RELEASE</org.springframework-version>
+		<org.springframework-version>4.2.4.RELEASE</org.springframework-version>
 		<java.version>1.6</java.version>
 		<org.aspectj-version>1.6.9</org.aspectj-version>
 		<org.slf4j-version>1.5.10</org.slf4j-version>
@@ -88,6 +88,7 @@
 			<version>${shiro.version}</version>
 		</dependency>
 		<!-- SECURITY end -->
+		<!-- Spring Related -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
@@ -109,7 +110,11 @@
 			<version>${org.springframework-version}</version>
 		</dependency>
 
-		<!-- Spring -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -150,12 +155,13 @@
 			<artifactId>javax.inject</artifactId>
 			<version>1</version>
 		</dependency>
-		<!-- ehcache -->
+		<!-- Mybatis -->
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis-ehcache</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		<!-- Ehcache -->
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache-core</artifactId>
@@ -164,10 +170,10 @@
 
 		<!-- Servlet -->
 		<dependency>
-	<groupId>javax.servlet</groupId>
-	<artifactId>javax.servlet-api</artifactId>
-	<version>3.1.0</version>
-</dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+		</dependency>
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
@@ -475,7 +481,7 @@
 			<version>3.0.0</version>
 		</dependency>
 
-		 
+
 		<!-- json object -->
 		<dependency>
 			<groupId>org.json</groupId>
@@ -501,22 +507,19 @@
 			<version>2.6.0</version>
 		</dependency>
 		<!-- Spring Session -->
-		  <dependency>
-                <groupId>org.springframework.session</groupId>
-                <artifactId>spring-session-data-redis</artifactId>
-                <version>1.0.2.RELEASE</version>
-                <type>pom</type>
-        </dependency>
-        <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-web</artifactId>
-                <version>4.1.6.RELEASE</version>
-        </dependency>
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-data-redis</artifactId>
+			<version>1.0.2.RELEASE</version>
+			<type>pom</type>
+		</dependency>
+	 
+
 	</dependencies>
- 
-  <build>
-    <finalName>f6</finalName>
-    <plugins>
+
+	<build>
+		<finalName>f6</finalName>
+		<plugins>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -543,8 +546,8 @@
 				</configuration>
 			</plugin>
 		</plugins>
-  </build>
-  <repositories>
+	</build>
+	<repositories>
 
 		<repository>
 			<id>springframework.maven.release</id>

@@ -49,6 +49,7 @@ public class MainFilter implements Filter {
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException {
+		logger.info("---------------Welcome to access F6 API--------------------------");
 		
 		try {
 			F6HttpRequestWrapper f6request = new F6HttpRequestWrapper((HttpServletRequest) request);
