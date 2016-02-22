@@ -25,7 +25,7 @@ public class MySimpleMappingExceptionResolver extends SimpleMappingExceptionReso
 	@Override
 	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object arg2,
 			Exception ex) {
-		logger.info("MySimpleMappingExceptionResolver resolveException =>" + ex);
+		logger.info("1.MySimpleMappingExceptionResolver resolveException =>" + ex);
 		ex.printStackTrace();
 		Map<String, Object> model = new HashMap<String, Object>();
 		// 根据不同错误转向不同页面
@@ -60,14 +60,14 @@ public class MySimpleMappingExceptionResolver extends SimpleMappingExceptionReso
 			logger.info("MySimpleMappingExceptionResolver => This is a Normal Request");
 			String errorcode = SystemConstans.RESPONSE_LABEL_ERROR;
 			//Map map = F6WebUtil.buildResponseMap(errorcode, null, "系统错误");
-			F6WebUtil.sendJson4Error(errorcode, "系统错误", response);
+			//F6WebUtil.sendJson4Error(errorcode, "系统错误", response);
 //			model.put("ex", ex);
 //			if (ex instanceof BusinessException) {
 //				return new ModelAndView("error-business", model);
 //			} else if (ex instanceof ParameterException) {
 //				return new ModelAndView("error-parameter", model);
 //			} else {
-			 F6WebUtil.buildErrorResponse(response, errorcode, "系统错误");
+			// F6WebUtil.buildErrorResponse(response, errorcode, "系统错误");
 				return null;
 		//	}
 		}
