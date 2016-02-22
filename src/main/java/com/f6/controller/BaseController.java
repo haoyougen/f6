@@ -74,6 +74,7 @@ public abstract class BaseController {
 	@ResponseBody
 	public Map reg(@RequestBody Map<String, String> param, RedirectAttributes attrs, HttpServletRequest request)
 			throws AuthenticationException, BusinessException {
+	 
 	  String userPassword1=  param.get("userPassword1");
 	  String userPassword2=  param.get("userPassword2");
 	  if(F6SystemUtils.isStrNull(userPassword1)||F6SystemUtils.isStrNull(userPassword2)||!userPassword1.equals(userPassword2)){
@@ -86,6 +87,7 @@ public abstract class BaseController {
 		dbresult.put("userPassword", "");
 		dbresult.put("userPassword1", "");
 		dbresult.put("userPassword2", "");
+		 
 		
 		return F6WebUtil.buildResponseMap(SystemConstans.RESPONSE_LABEL_SUCCESS, dbresult, "reg successful");
 	}
