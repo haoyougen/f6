@@ -64,9 +64,6 @@ public class F6WebUtil {
 	}
 
 	public static void sendJson4Error(String errorcode, String messagestr, HttpServletResponse response) {
-		// String json = "{\"success\":\"2\",\"error\":\"" + messagestr +
-		// "\",\"message\":\"" + messagestr + "\"}";
-
 		Map respons = buildResponseMap(errorcode, "", messagestr);
 		String json = JSON.toJSONString(respons);
 		response.setHeader("contentType", "text/html; charset=utf-8");
