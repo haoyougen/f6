@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HeaderElement;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,14 +55,19 @@ public class F6WebUtil {
 
 	// 判断是否为 AJAX 请求
 	public static boolean isAjax(HttpServletRequest request) {
-		return request.getHeader("X-Requested-With") != null;
+		String headeraccept = request.getHeader("accept");
+		String ajaxrequest = request.getHeader("X-Requested-With");
+
+		return ((!F6SystemUtils.isStrNull(headeraccept) && headeraccept.indexOf("application/json") > -1)
+				|| (!F6SystemUtils.isStrNull(ajaxrequest) && ajaxrequest.indexOf("XMLHttpRequest") > -1));
+		// return request.getHeader("X-Requested-With") != null;
 	}
 
 	public static void sendJson4Error(String errorcode, String messagestr, HttpServletResponse response) {
 		// String json = "{\"success\":\"2\",\"error\":\"" + messagestr +
 		// "\",\"message\":\"" + messagestr + "\"}";
 
-		Map respons = buildResponseMap(errorcode, messagestr, messagestr);
+		Map respons = buildResponseMap(errorcode, "", messagestr);
 		String json = JSON.toJSONString(respons);
 		response.setHeader("contentType", "text/html; charset=utf-8");
 		response.setContentType("text/html;charset=utf-8");
@@ -104,8 +110,7 @@ public class F6WebUtil {
 
 	public static MultipartFile saveFiles(HttpServletRequest request, String filename) {
 		// List<MultipartFile> fileList = new ArrayList<MultipartFile>();
-		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
-				request.getSession().getServletContext());
+		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession().getServletContext());
 		multipartResolver.setDefaultEncoding("utf-8");
 		// 判断 request 是否有文件上传,即多部分请求
 		MultipartFile file = null;
@@ -248,8 +253,8 @@ public class F6WebUtil {
 			// BtmuParamVO paramvo = (BtmuParamVO) JSON.parse(sb.toString());
 
 			JSONObject jsonobject = JSON.parseObject(sb.toString());
-			if(jsonobject!=null)
-			propertyValue = (String) jsonobject.getString(propertyName);
+			if (jsonobject != null)
+				propertyValue = (String) jsonobject.getString(propertyName);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -273,7 +278,5 @@ public class F6WebUtil {
 		}
 
 	}
-	
-
 
 }

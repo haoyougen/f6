@@ -109,7 +109,7 @@
 
 
 	<bean id="exceptionResolver"
-		class="com.f6.exceptions.handler.MySimpleMappingExceptionResolver">
+		class="com.f6.exceptions.handler.F6SimpleMappingExceptionResolver">
 		<property name="defaultErrorView" value="error"></property>
 		<property name="exceptionAttribute" value="ex"></property>
 		<property name="warnLogCategory" value="WARN"></property>

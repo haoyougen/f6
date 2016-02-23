@@ -78,7 +78,8 @@ public class MainFilter implements Filter {
 
 			chain.doFilter(f6request, response);
 		} catch (Exception e) {
-			F6WebUtil.buildErrorResponse((HttpServletResponse) response,SystemConstans.RESPONSE_LABEL_ERROR,SystemConstans.SYSTEM_ERROR);
+			//F6WebUtil.buildErrorResponse((HttpServletResponse) response,SystemConstans.RESPONSE_LABEL_ERROR,SystemConstans.SYSTEM_ERROR);
+			e.printStackTrace();
 		}
 	}
 
