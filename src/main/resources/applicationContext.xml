@@ -17,17 +17,34 @@
     http://www.springframework.org/schema/aop/spring-aop.xsd
     http://www.springframework.org/schema/jee
     http://www.springframework.org/schema/jee/spring-jee.xsd">
-    
+
 	<!-- open message converter -->
 	<mvc:annotation-driven />
 	<!-- load jdbc.properties -->
 	<context:component-scan base-package="com.f6"></context:component-scan>
+
 	
-	<!-- spring session config -->
-    <context:annotation-config/>
-    <bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration"/>
-    <bean class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"/>
-    
+	<context:annotation-config />
+	
+	<!-- enable transaction demarcation with annotations -->
+	<context:property-placeholder
+		ignore-unresolvable="true" location="classpath:jdbc.properties" />
+	<context:property-placeholder
+		ignore-unresolvable="true" location="classpath:redis.properties" />
+
+	<context:property-placeholder
+		ignore-unresolvable="true" location="classpath:mail.properties" />
+		<!-- spring session config -->
+	<bean
+		class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration">
+		<property name="maxInactiveIntervalInSeconds" value="600"></property>
+		</bean>
+	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig" />
+	<bean id="connectionFactory"
+		class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+		p:host-name="${redis.host}" p:port="${redis.port}" p:password="${redis.pass}"
+		p:pool-config-ref="poolConfig" />
+
 	<bean id="messageSource"
 		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="basenames">
@@ -40,12 +57,7 @@
 		<property name="defaultEncoding" value="UTF-8" />
 	</bean>
 
-	<!-- enable transaction demarcation with annotations -->
-	<context:property-placeholder
-		ignore-unresolvable="true" location="classpath:jdbc.properties" />
-
-	<context:property-placeholder
-		ignore-unresolvable="true" location="classpath:mail.properties" />
+	
 
 	<!-- <bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean"> 
 		<property name="locations"> <list> <value>classpath:qiniu.properties</value> 
@@ -181,7 +193,7 @@
 			</list>
 		</property>
 	</bean>
-		<bean id="authenService" class="com.f6.auth.service.AuthenService">
+	<bean id="authenService" class="com.f6.auth.service.AuthenService">
 		<property name="authenDAO" ref="authenDAO" />
 	</bean>
 

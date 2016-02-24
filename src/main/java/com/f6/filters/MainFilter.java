@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.session.web.http.HttpSessionManager;
 
 import com.f6.auth.domain.UserVO;
 import com.f6.exceptions.BusinessException;
@@ -50,13 +51,14 @@ public class MainFilter implements Filter {
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException {
 		logger.info("---------------Welcome to access F6 API--------------------------");
-		
+
 		try {
 			F6HttpRequestWrapper f6request = new F6HttpRequestWrapper((HttpServletRequest) request);
 			String functionid = F6WebUtil.getRequestProperty(f6request, SystemConstans.PARAM_FUNCTION_ID);
+	 
 			// check function id
 			if (F6SystemUtils.isStrNull(functionid)) {
-				F6WebUtil.buildErrorResponse((HttpServletResponse) response,SystemConstans.RESPONSE_LABEL_NOAUTH,SystemConstans.ERROR_BAD_REQUEST);
+				F6WebUtil.buildErrorResponse((HttpServletResponse) response, SystemConstans.RESPONSE_LABEL_NOAUTH, SystemConstans.ERROR_BAD_REQUEST);
 				return;
 			}
 			//
@@ -64,21 +66,22 @@ public class MainFilter implements Filter {
 			String requesturl = ((HttpServletRequest) request).getRequestURI();
 
 			String requestURL = requesturl.substring(contextpath.length());
-			logger.info("您正在访问："+requestURL);
+			logger.info("您正在访问：" + requestURL);
 			if (!exclusiveurl.contains(requestURL)) {
 				boolean isauthorized = accessAuthenticate((HttpServletRequest) request, functionid);
 				if (!isauthorized) {
-					F6WebUtil.buildErrorResponse((HttpServletResponse) response,SystemConstans.RESPONSE_LABEL_NOAUTH,SystemConstans.ERROR_NOT_AUTH);
+					F6WebUtil.buildErrorResponse((HttpServletResponse) response, SystemConstans.RESPONSE_LABEL_NOAUTH, SystemConstans.ERROR_NOT_AUTH);
 					return;
 				}
-			}else{
-				logger.info(requestURL+"已存在白名单");
+			} else {
+				logger.info(requestURL + "已存在白名单");
 			}
 			logger.info(contextpath + "===" + requestURL);
 
 			chain.doFilter(f6request, response);
 		} catch (Exception e) {
-			//F6WebUtil.buildErrorResponse((HttpServletResponse) response,SystemConstans.RESPONSE_LABEL_ERROR,SystemConstans.SYSTEM_ERROR);
+			// F6WebUtil.buildErrorResponse((HttpServletResponse)
+			// response,SystemConstans.RESPONSE_LABEL_ERROR,SystemConstans.SYSTEM_ERROR);
 			e.printStackTrace();
 		}
 	}
@@ -86,7 +89,7 @@ public class MainFilter implements Filter {
 	private boolean accessAuthenticate(HttpServletRequest request, String functionid) throws BusinessException {
 		String userid = isTokenValid(request);
 		if (!F6SystemUtils.isStrNull(userid)) {
-			boolean ispermitted = isAccessPermitted(userid,functionid);
+			boolean ispermitted = isAccessPermitted(userid, functionid);
 			return ispermitted;
 		}
 
