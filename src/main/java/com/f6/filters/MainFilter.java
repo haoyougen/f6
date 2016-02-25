@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.session.web.http.HttpSessionManager;
 
 import com.f6.auth.domain.UserVO;
 import com.f6.exceptions.BusinessException;

@@ -34,9 +34,11 @@ public abstract class BaseController {
 	@Autowired
 	private CommonService commonservice;
 
-	public abstract void authenticate(HttpServletRequest requset, HttpServletResponse response) throws AuthenticationException;
+	public abstract void authenticate(HttpServletRequest requset, HttpServletResponse response)
+			throws AuthenticationException;
 
-	public abstract void dataValidate(HttpServletRequest requset, HttpServletResponse response) throws BadParameterException;
+	public abstract void dataValidate(HttpServletRequest requset, HttpServletResponse response)
+			throws BadParameterException;
 
 	public abstract void postProcess(HttpServletRequest requset, HttpServletResponse response);
 
@@ -61,7 +63,8 @@ public abstract class BaseController {
 		}
 	}
 
-	public abstract String query(Map paramap, HttpServletRequest requset, HttpServletResponse reponse) throws BusinessException;
+	public abstract String query(Map paramap, HttpServletRequest requset, HttpServletResponse reponse)
+			throws BusinessException;
 
 	@RequestMapping(value = DispatherConstant.LOGOUT, method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	public Map logout(HttpServletRequest req, HttpServletResponse res) {
@@ -74,30 +77,39 @@ public abstract class BaseController {
 	@ResponseBody
 	public Map reg(@RequestBody Map<String, String> param, RedirectAttributes attrs, HttpServletRequest request)
 			throws AuthenticationException, BusinessException {
-	 
-	  String userPassword1=  param.get("userPassword1");
-	  String userPassword2=  param.get("userPassword2");
-	  if(F6SystemUtils.isStrNull(userPassword1)||F6SystemUtils.isStrNull(userPassword2)||!userPassword1.equals(userPassword2)){
-		  throw new AuthenticationException("两次密码输入不一致");
-	  }
+		String userName = param.get("userName");
+		String userPassword = param.get("userPassword");
+		String userPassword1 = param.get("userPassword1");
+		String userPassword2 = param.get("userPassword2");
+
+		if (F6SystemUtils.isStrNull(userName) || F6SystemUtils.isStrNull(userPassword)) {
+			throw new AuthenticationException("用户名密码不能为空");
+
+		}
+		if (F6SystemUtils.isStrNull(userPassword1) || F6SystemUtils.isStrNull(userPassword2)
+				|| !userPassword1.equals(userPassword2)) {
+			throw new AuthenticationException("两次密码输入不一致");
+		}
+
 		param.put("userPassword", PasswordHelper.encryptString(userPassword1));
-	  
+
 		DBParameter dbparameter = F6SystemUtils.buildDBParameter("UserVO", "insert", param);
 		Map dbresult = commonservice.change(dbparameter, SystemConstans.CHANGE_ACTION_INSERT);
 		dbresult.put("userPassword", "");
 		dbresult.put("userPassword1", "");
 		dbresult.put("userPassword2", "");
-		 
-		
+
 		return F6WebUtil.buildResponseMap(SystemConstans.RESPONSE_LABEL_SUCCESS, dbresult, "reg successful");
 	}
 
 	@RequestMapping(value = DispatherConstant.LOGIN, method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public Map login(@RequestBody UserVO uservo, RedirectAttributes attrs, HttpServletRequest request)
+	public Map login(@RequestBody Map<String, String> param, RedirectAttributes attrs, HttpServletRequest request)
 			throws AuthenticationException, BusinessException {
-		String username = uservo.getUserName();
-		String password = uservo.getUserPassword();
+		String username = param.get("username");
+		logger.info(username+"------------------Login-----------------------------");
+		String password = param.get("userPassword");
+		
 		if (F6SystemUtils.isStrNull(username) || F6SystemUtils.isStrNull(password)) {
 			return F6WebUtil.buildResponseMap(SystemConstans.RESPONSE_LABEL_NOAUTH, "", SystemConstans.ERROR_USER_PWD);
 		}
@@ -106,17 +118,19 @@ public abstract class BaseController {
 		String encryptedpwd = PasswordHelper.encryptString(password);
 
 		Map<String, String> parametermap = new HashMap<String, String>();
-		parametermap.put("identificationCode", username);
+		parametermap.put("identificationId", username);
 
 		DBParameter dbparam = F6SystemUtils.buildDBParameter("UserVO", "selectByIdentificationID", parametermap);
 
 		Map<String, ?> dbresult = commonservice.queryOne(dbparam);
 		if (dbresult == null || dbresult.size() == 0) {
-			return F6WebUtil.buildResponseMap(SystemConstans.RESPONSE_LABEL_NOAUTH, "", SystemConstans.ERROR_USER_PWD);
+			return F6WebUtil.buildResponseMap(SystemConstans.RESPONSE_LABEL_NOAUTH, "", SystemConstans.ERROR_NO_USER);
 		} else {
-			String dbpwd = (String) dbresult.get("password");
+			String dbpwd = (String) dbresult.get("userPassword");
+			logger.info("pwd:" + encryptedpwd + "--" + dbpwd + "---" + encryptedpwd.equals(dbpwd));
 			if (F6SystemUtils.isStrNull(dbpwd) || !encryptedpwd.equals(dbpwd)) {
-				return F6WebUtil.buildResponseMap(SystemConstans.RESPONSE_LABEL_NOAUTH, "", SystemConstans.ERROR_USER_PWD);
+				return F6WebUtil.buildResponseMap(SystemConstans.RESPONSE_LABEL_NOAUTH, "",
+						SystemConstans.ERROR_USER_PWD);
 			}
 
 		}
@@ -127,12 +141,15 @@ public abstract class BaseController {
 		String requestIP = request.getRemoteAddr();
 		String token = PasswordHelper.generateToken(username + encryptedpwd + requestIP);
 		resultvo.setToken(token);
+
 		Map<String, String> tokenparam = new HashMap<String, String>();
-		tokenparam.put("userid", username);
+		tokenparam.put("identificationId", username);
 		tokenparam.put("token", token);
 
 		DBParameter dbparameter = F6SystemUtils.buildDBParameter("TokenVO", "updateToken", tokenparam);
 		commonservice.change(dbparameter, SystemConstans.CHANGE_ACTION_UPDATE);
+
+		request.getSession().setAttribute(SystemConstans.CURRENT_USER, username);
 
 		return F6WebUtil.buildResponseMap(SystemConstans.RESPONSE_LABEL_SUCCESS, resultvo, "");
 	}

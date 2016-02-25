@@ -1,235 +1,259 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.f6.daos.UserVOMapper" >
-  <resultMap id="BaseResultMap" type="com.f6.vo.UserVO" >
-    <id column="User_Code" property="userCode" jdbcType="VARCHAR" />
-    <result column="User_Name" property="userName" jdbcType="VARCHAR" />
-    <result column="Corp_Code" property="corpCode" jdbcType="VARCHAR" />
-    <result column="Organize_Code" property="organizeCode" jdbcType="VARCHAR" />
-    <result column="Identification_Type" property="identificationType" jdbcType="VARCHAR" />
-    <result column="Identification_Id" property="identificationId" jdbcType="VARCHAR" />
-    <result column="User_Telephone" property="userTelephone" jdbcType="VARCHAR" />
-    <result column="User_email" property="userEmail" jdbcType="VARCHAR" />
-    <result column="Is_Active" property="isActive" jdbcType="VARCHAR" />
-    <result column="User_Password" property="userPassword" jdbcType="VARCHAR" />
-    <result column="User_salt" property="userSalt" jdbcType="VARCHAR" />
-    <result column="token" property="token" jdbcType="VARCHAR" />
-    <result column="Mem" property="mem" jdbcType="VARCHAR" />
-    <result column="Ur_Create" property="urCreate" jdbcType="VARCHAR" />
-    <result column="Date_Create" property="dateCreate" jdbcType="TIMESTAMP" />
-    <result column="Ur_Alter" property="urAlter" jdbcType="VARCHAR" />
-    <result column="Date_Alter" property="dateAlter" jdbcType="TIMESTAMP" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    User_Code, User_Name, Corp_Code, Organize_Code, Identification_Type, Identification_Id, 
-    User_Telephone, User_email, Is_Active, User_Password, User_salt, token, Mem, Ur_Create, 
-    Date_Create, Ur_Alter, Date_Alter
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
-    <include refid="Base_Column_List" />
-    from sys_user
-    where User_Code = #{userCode,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from sys_user
-    where User_Code = #{userCode,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="com.f6.vo.UserVO" >
-    insert into sys_user (User_Code, User_Name, Corp_Code, 
-      Organize_Code, Identification_Type, Identification_Id, 
-      User_Telephone, User_email, Is_Active, 
-      User_Password, User_salt, token, 
-      Mem, Ur_Create, Date_Create, 
-      Ur_Alter, Date_Alter)
-    values (#{userCode,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{corpCode,jdbcType=VARCHAR}, 
-      #{organizeCode,jdbcType=VARCHAR}, #{identificationType,jdbcType=VARCHAR}, #{identificationId,jdbcType=VARCHAR}, 
-      #{userTelephone,jdbcType=VARCHAR}, #{userEmail,jdbcType=VARCHAR}, #{isActive,jdbcType=VARCHAR}, 
-      #{userPassword,jdbcType=VARCHAR}, #{userSalt,jdbcType=VARCHAR}, #{token,jdbcType=VARCHAR}, 
-      #{mem,jdbcType=VARCHAR}, #{urCreate,jdbcType=VARCHAR}, #{dateCreate,jdbcType=TIMESTAMP}, 
-      #{urAlter,jdbcType=VARCHAR}, #{dateAlter,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.f6.vo.UserVO" >
-    insert into sys_user
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="userCode != null" >
-        User_Code,
-      </if>
-      <if test="userName != null" >
-        User_Name,
-      </if>
-      <if test="corpCode != null" >
-        Corp_Code,
-      </if>
-      <if test="organizeCode != null" >
-        Organize_Code,
-      </if>
-      <if test="identificationType != null" >
-        Identification_Type,
-      </if>
-      <if test="identificationId != null" >
-        Identification_Id,
-      </if>
-      <if test="userTelephone != null" >
-        User_Telephone,
-      </if>
-      <if test="userEmail != null" >
-        User_email,
-      </if>
-      <if test="isActive != null" >
-        Is_Active,
-      </if>
-      <if test="userPassword != null" >
-        User_Password,
-      </if>
-      <if test="userSalt != null" >
-        User_salt,
-      </if>
-      <if test="token != null" >
-        token,
-      </if>
-      <if test="mem != null" >
-        Mem,
-      </if>
-      <if test="urCreate != null" >
-        Ur_Create,
-      </if>
-      <if test="dateCreate != null" >
-        Date_Create,
-      </if>
-      <if test="urAlter != null" >
-        Ur_Alter,
-      </if>
-      <if test="dateAlter != null" >
-        Date_Alter,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="userCode != null" >
-        #{userCode,jdbcType=VARCHAR},
-      </if>
-      <if test="userName != null" >
-        #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="corpCode != null" >
-        #{corpCode,jdbcType=VARCHAR},
-      </if>
-      <if test="organizeCode != null" >
-        #{organizeCode,jdbcType=VARCHAR},
-      </if>
-      <if test="identificationType != null" >
-        #{identificationType,jdbcType=VARCHAR},
-      </if>
-      <if test="identificationId != null" >
-        #{identificationId,jdbcType=VARCHAR},
-      </if>
-      <if test="userTelephone != null" >
-        #{userTelephone,jdbcType=VARCHAR},
-      </if>
-      <if test="userEmail != null" >
-        #{userEmail,jdbcType=VARCHAR},
-      </if>
-      <if test="isActive != null" >
-        #{isActive,jdbcType=VARCHAR},
-      </if>
-      <if test="userPassword != null" >
-        #{userPassword,jdbcType=VARCHAR},
-      </if>
-      <if test="userSalt != null" >
-        #{userSalt,jdbcType=VARCHAR},
-      </if>
-      <if test="token != null" >
-        #{token,jdbcType=VARCHAR},
-      </if>
-      <if test="mem != null" >
-        #{mem,jdbcType=VARCHAR},
-      </if>
-      <if test="urCreate != null" >
-        #{urCreate,jdbcType=VARCHAR},
-      </if>
-      <if test="dateCreate != null" >
-        #{dateCreate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="urAlter != null" >
-        #{urAlter,jdbcType=VARCHAR},
-      </if>
-      <if test="dateAlter != null" >
-        #{dateAlter,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.f6.vo.UserVO" >
-    update sys_user
-    <set >
-      <if test="userName != null" >
-        User_Name = #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="corpCode != null" >
-        Corp_Code = #{corpCode,jdbcType=VARCHAR},
-      </if>
-      <if test="organizeCode != null" >
-        Organize_Code = #{organizeCode,jdbcType=VARCHAR},
-      </if>
-      <if test="identificationType != null" >
-        Identification_Type = #{identificationType,jdbcType=VARCHAR},
-      </if>
-      <if test="identificationId != null" >
-        Identification_Id = #{identificationId,jdbcType=VARCHAR},
-      </if>
-      <if test="userTelephone != null" >
-        User_Telephone = #{userTelephone,jdbcType=VARCHAR},
-      </if>
-      <if test="userEmail != null" >
-        User_email = #{userEmail,jdbcType=VARCHAR},
-      </if>
-      <if test="isActive != null" >
-        Is_Active = #{isActive,jdbcType=VARCHAR},
-      </if>
-      <if test="userPassword != null" >
-        User_Password = #{userPassword,jdbcType=VARCHAR},
-      </if>
-      <if test="userSalt != null" >
-        User_salt = #{userSalt,jdbcType=VARCHAR},
-      </if>
-      <if test="token != null" >
-        token = #{token,jdbcType=VARCHAR},
-      </if>
-      <if test="mem != null" >
-        Mem = #{mem,jdbcType=VARCHAR},
-      </if>
-      <if test="urCreate != null" >
-        Ur_Create = #{urCreate,jdbcType=VARCHAR},
-      </if>
-      <if test="dateCreate != null" >
-        Date_Create = #{dateCreate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="urAlter != null" >
-        Ur_Alter = #{urAlter,jdbcType=VARCHAR},
-      </if>
-      <if test="dateAlter != null" >
-        Date_Alter = #{dateAlter,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where User_Code = #{userCode,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.f6.vo.UserVO" >
-    update sys_user
-    set User_Name = #{userName,jdbcType=VARCHAR},
-      Corp_Code = #{corpCode,jdbcType=VARCHAR},
-      Organize_Code = #{organizeCode,jdbcType=VARCHAR},
-      Identification_Type = #{identificationType,jdbcType=VARCHAR},
-      Identification_Id = #{identificationId,jdbcType=VARCHAR},
-      User_Telephone = #{userTelephone,jdbcType=VARCHAR},
-      User_email = #{userEmail,jdbcType=VARCHAR},
-      Is_Active = #{isActive,jdbcType=VARCHAR},
-      User_Password = #{userPassword,jdbcType=VARCHAR},
-      User_salt = #{userSalt,jdbcType=VARCHAR},
-      token = #{token,jdbcType=VARCHAR},
-      Mem = #{mem,jdbcType=VARCHAR},
-      Ur_Create = #{urCreate,jdbcType=VARCHAR},
-      Date_Create = #{dateCreate,jdbcType=TIMESTAMP},
-      Ur_Alter = #{urAlter,jdbcType=VARCHAR},
-      Date_Alter = #{dateAlter,jdbcType=TIMESTAMP}
-    where User_Code = #{userCode,jdbcType=VARCHAR}
-  </update>
+<mapper namespace="com.f6.daos.UserVOMapper">
+	<resultMap id="BaseResultMap" type="com.f6.vo.UserVO">
+		<id column="User_Code" property="userCode" jdbcType="VARCHAR" />
+		<result column="User_Name" property="userName" jdbcType="VARCHAR" />
+		<result column="Corp_Code" property="corpCode" jdbcType="VARCHAR" />
+		<result column="Organize_Code" property="organizeCode"
+			jdbcType="VARCHAR" />
+		<result column="Identification_Type" property="identificationType"
+			jdbcType="VARCHAR" />
+		<result column="Identification_Id" property="identificationId"
+			jdbcType="VARCHAR" />
+		<result column="User_Telephone" property="userTelephone"
+			jdbcType="VARCHAR" />
+		<result column="User_email" property="userEmail" jdbcType="VARCHAR" />
+		<result column="Is_Active" property="isActive" jdbcType="VARCHAR" />
+		<result column="User_Password" property="userPassword"
+			jdbcType="VARCHAR" />
+		<result column="User_salt" property="userSalt" jdbcType="VARCHAR" />
+		<result column="token" property="token" jdbcType="VARCHAR" />
+		<result column="Mem" property="mem" jdbcType="VARCHAR" />
+		<result column="Ur_Create" property="urCreate" jdbcType="VARCHAR" />
+		<result column="Date_Create" property="dateCreate" jdbcType="TIMESTAMP" />
+		<result column="Ur_Alter" property="urAlter" jdbcType="VARCHAR" />
+		<result column="Date_Alter" property="dateAlter" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		User_Code, User_Name, Corp_Code, Organize_Code, Identification_Type,
+		Identification_Id,
+		User_Telephone, User_email, Is_Active, User_Password, User_salt, token, Mem,
+		Ur_Create,
+		Date_Create, Ur_Alter, Date_Alter
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from sys_user
+		where User_Code = #{userCode,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectByIdentificationID" resultType="java.util.HashMap"
+		parameterType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from sys_user
+		where Identification_Id = #{identificationId,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from sys_user
+		where User_Code = #{userCode,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.f6.vo.UserVO">
+		<selectKey keyProperty="userCode" resultType="String" order="BEFORE">
+			select nextval('USER')
+		</selectKey>
+		insert into sys_user (User_Code, User_Name, Corp_Code,
+		Organize_Code, Identification_Type, Identification_Id,
+		User_Telephone, User_email, Is_Active,
+		User_Password, User_salt, token,
+		Mem, Ur_Create, Date_Create,
+		Ur_Alter, Date_Alter)
+		values (#{userCode,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
+		#{corpCode,jdbcType=VARCHAR},
+		#{organizeCode,jdbcType=VARCHAR}, #{identificationType,jdbcType=VARCHAR},
+		#{identificationId,jdbcType=VARCHAR},
+		#{userTelephone,jdbcType=VARCHAR}, #{userEmail,jdbcType=VARCHAR},
+		#{isActive,jdbcType=VARCHAR},
+		#{userPassword,jdbcType=VARCHAR}, #{userSalt,jdbcType=VARCHAR}, #{token,jdbcType=VARCHAR},
+		#{mem,jdbcType=VARCHAR}, #{urCreate,jdbcType=VARCHAR},
+		#{dateCreate,jdbcType=TIMESTAMP},
+		#{urAlter,jdbcType=VARCHAR}, #{dateAlter,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="com.f6.vo.UserVO">
+		insert into sys_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userCode != null">
+				User_Code,
+			</if>
+			<if test="userName != null">
+				User_Name,
+			</if>
+			<if test="corpCode != null">
+				Corp_Code,
+			</if>
+			<if test="organizeCode != null">
+				Organize_Code,
+			</if>
+			<if test="identificationType != null">
+				Identification_Type,
+			</if>
+			<if test="identificationId != null">
+				Identification_Id,
+			</if>
+			<if test="userTelephone != null">
+				User_Telephone,
+			</if>
+			<if test="userEmail != null">
+				User_email,
+			</if>
+			<if test="isActive != null">
+				Is_Active,
+			</if>
+			<if test="userPassword != null">
+				User_Password,
+			</if>
+			<if test="userSalt != null">
+				User_salt,
+			</if>
+			<if test="token != null">
+				token,
+			</if>
+			<if test="mem != null">
+				Mem,
+			</if>
+			<if test="urCreate != null">
+				Ur_Create,
+			</if>
+			<if test="dateCreate != null">
+				Date_Create,
+			</if>
+			<if test="urAlter != null">
+				Ur_Alter,
+			</if>
+			<if test="dateAlter != null">
+				Date_Alter,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userCode != null">
+				#{userCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userName != null">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="corpCode != null">
+				#{corpCode,jdbcType=VARCHAR},
+			</if>
+			<if test="organizeCode != null">
+				#{organizeCode,jdbcType=VARCHAR},
+			</if>
+			<if test="identificationType != null">
+				#{identificationType,jdbcType=VARCHAR},
+			</if>
+			<if test="identificationId != null">
+				#{identificationId,jdbcType=VARCHAR},
+			</if>
+			<if test="userTelephone != null">
+				#{userTelephone,jdbcType=VARCHAR},
+			</if>
+			<if test="userEmail != null">
+				#{userEmail,jdbcType=VARCHAR},
+			</if>
+			<if test="isActive != null">
+				#{isActive,jdbcType=VARCHAR},
+			</if>
+			<if test="userPassword != null">
+				#{userPassword,jdbcType=VARCHAR},
+			</if>
+			<if test="userSalt != null">
+				#{userSalt,jdbcType=VARCHAR},
+			</if>
+			<if test="token != null">
+				#{token,jdbcType=VARCHAR},
+			</if>
+			<if test="mem != null">
+				#{mem,jdbcType=VARCHAR},
+			</if>
+			<if test="urCreate != null">
+				#{urCreate,jdbcType=VARCHAR},
+			</if>
+			<if test="dateCreate != null">
+				#{dateCreate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="urAlter != null">
+				#{urAlter,jdbcType=VARCHAR},
+			</if>
+			<if test="dateAlter != null">
+				#{dateAlter,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.f6.vo.UserVO">
+		update sys_user
+		<set>
+			<if test="userName != null">
+				User_Name = #{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="corpCode != null">
+				Corp_Code = #{corpCode,jdbcType=VARCHAR},
+			</if>
+			<if test="organizeCode != null">
+				Organize_Code = #{organizeCode,jdbcType=VARCHAR},
+			</if>
+			<if test="identificationType != null">
+				Identification_Type = #{identificationType,jdbcType=VARCHAR},
+			</if>
+			<if test="identificationId != null">
+				Identification_Id = #{identificationId,jdbcType=VARCHAR},
+			</if>
+			<if test="userTelephone != null">
+				User_Telephone = #{userTelephone,jdbcType=VARCHAR},
+			</if>
+			<if test="userEmail != null">
+				User_email = #{userEmail,jdbcType=VARCHAR},
+			</if>
+			<if test="isActive != null">
+				Is_Active = #{isActive,jdbcType=VARCHAR},
+			</if>
+			<if test="userPassword != null">
+				User_Password = #{userPassword,jdbcType=VARCHAR},
+			</if>
+			<if test="userSalt != null">
+				User_salt = #{userSalt,jdbcType=VARCHAR},
+			</if>
+			<if test="token != null">
+				token = #{token,jdbcType=VARCHAR},
+			</if>
+			<if test="mem != null">
+				Mem = #{mem,jdbcType=VARCHAR},
+			</if>
+			<if test="urCreate != null">
+				Ur_Create = #{urCreate,jdbcType=VARCHAR},
+			</if>
+			<if test="dateCreate != null">
+				Date_Create = #{dateCreate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="urAlter != null">
+				Ur_Alter = #{urAlter,jdbcType=VARCHAR},
+			</if>
+			<if test="dateAlter != null">
+				Date_Alter = #{dateAlter,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where User_Code = #{userCode,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.f6.vo.UserVO">
+		update sys_user
+		set User_Name = #{userName,jdbcType=VARCHAR},
+		Corp_Code = #{corpCode,jdbcType=VARCHAR},
+		Organize_Code = #{organizeCode,jdbcType=VARCHAR},
+		Identification_Type = #{identificationType,jdbcType=VARCHAR},
+		Identification_Id = #{identificationId,jdbcType=VARCHAR},
+		User_Telephone = #{userTelephone,jdbcType=VARCHAR},
+		User_email = #{userEmail,jdbcType=VARCHAR},
+		Is_Active = #{isActive,jdbcType=VARCHAR},
+		User_Password = #{userPassword,jdbcType=VARCHAR},
+		User_salt = #{userSalt,jdbcType=VARCHAR},
+		token = #{token,jdbcType=VARCHAR},
+		Mem = #{mem,jdbcType=VARCHAR},
+		Ur_Create = #{urCreate,jdbcType=VARCHAR},
+		Date_Create = #{dateCreate,jdbcType=TIMESTAMP},
+		Ur_Alter = #{urAlter,jdbcType=VARCHAR},
+		Date_Alter = #{dateAlter,jdbcType=TIMESTAMP}
+		where User_Code = #{userCode,jdbcType=VARCHAR}
+	</update>
 </mapper>

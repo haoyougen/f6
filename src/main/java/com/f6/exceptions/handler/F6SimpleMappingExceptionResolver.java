@@ -25,13 +25,13 @@ public class F6SimpleMappingExceptionResolver extends SimpleMappingExceptionReso
 
 	@Override
 	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object arg2, Exception ex) {
-		logger.info("1.MySimpleMappingExceptionResolver resolveException =>" + ex);
+		logger.info("1.F6SimpleMappingExceptionResolver resolveException =>" + ex);
 		Map<String, Object> model = new HashMap<String, Object>();
 		String errormsg = ex.getMessage();
 		logger.info("Error message =======>" + errormsg);
 		// 根据不同错误转向不同页面
 		if (F6WebUtil.isAjax(request)) {
-			logger.info("MySimpleMappingExceptionResolver => This is a Ajax Request");
+			logger.info("F6SimpleMappingExceptionResolver => This is a Ajax Request");
 
 			if (errormsg.length() > 50) {
 				errormsg = "系统错误";
@@ -54,7 +54,7 @@ public class F6SimpleMappingExceptionResolver extends SimpleMappingExceptionReso
 			 return null;
 			//return new ModelAndView("error", map);
 		} else {
-			logger.info("MySimpleMappingExceptionResolver => This is a Normal Request");
+			logger.info("F6SimpleMappingExceptionResolver => This is a Normal Request");
 			String errorcode = SystemConstans.RESPONSE_LABEL_ERROR;
 			// Map map = F6WebUtil.buildResponseMap(errorcode, null, "系统错误");
 			// F6WebUtil.sendJson4Error(errorcode, "系统错误", response);
