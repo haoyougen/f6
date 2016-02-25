@@ -1,0 +1,10 @@
+insert into biz_product (prod_code,prod_name) values('prod011','prodname011');
+insert into biz_product (prod_code,prod_name) values('prod012','prodname012');
+insert into biz_product (prod_code,prod_name) values('prod013','prodname013');
+insert into biz_product (prod_code,prod_name) values('prod014','prodname014');
+insert into biz_product (prod_code,prod_name) values('prod015','prodname015');
+insert into biz_product (prod_code,prod_name) values('prod016','prodname016');
+insert into biz_product (prod_code,prod_name) values('prod017','prodname017');
+insert into biz_product (prod_code,prod_name) values('prod018','prodname018');
+insert into biz_product (prod_code,prod_name) values('prod019','prodname019');
+insert into biz_product (prod_code,prod_name) values('prod020','prodname020');
