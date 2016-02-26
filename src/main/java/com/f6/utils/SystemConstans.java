@@ -28,4 +28,11 @@ public class SystemConstans {
 	public static final String CHANGE_ACTION_DELETE = "DELETE";
 	public static final String SEPERATOR = "|";
 	public static final String PARAM_TOKEN = "f6token";
+	
+	
+	public static final String REQUEST_PARAM_MODULE="module";
+	public static final String REQUEST_PARAM_ACTION="action";
+	
+	
+	
 }

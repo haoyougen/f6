@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,7 +19,7 @@ public abstract class BaseDAO {
 	public Map<String, String> queryOne(DBParameter param) throws DAOException {
 		Map<String, String> result = null;
 		try {
-			result = sqlSessionTemplate.selectOne("com.f6.daos." + param.getModule() + "Mapper." + param.getAction(),
+			result = sqlSessionTemplate.selectOne("com.f6.daos." + param.getModule() + "VOMapper." + param.getAction(),
 					param.getParameter());
 		} catch (Exception e) {
 			throw new DAOException(e);
@@ -30,8 +31,8 @@ public abstract class BaseDAO {
 	public List<Map<String, ?>> queryMore(DBParameter param) throws DAOException {
 		List<Map<String, ?>> result = null;
 		try {
-			result = sqlSessionTemplate.selectList("com.f6.daos." + param.getModule() + "Mapper." + param.getAction(),
-					param.getParameter());
+			result = sqlSessionTemplate.selectList("com.f6.daos." + param.getModule() + "VOMapper." + param.getAction(),
+					param.getParameter(),new RowBounds(2, 3));
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}

@@ -1,6 +1,7 @@
 package com.f6.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,7 +51,7 @@ public abstract class BaseController {
 		baseValidate(paramap);
 		dataValidate(requset, response);
 		authenticate(requset, response);
-		String result = query(paramap, requset, response);
+		List<Map<String, ?>> result = query(paramap, requset, response);
 		postProcess(requset, response);
 		return F6WebUtil.buildResponseMap(SystemConstans.RESPONSE_LABEL_SUCCESS, result, "");
 	}
@@ -63,8 +64,13 @@ public abstract class BaseController {
 		}
 	}
 
-	public abstract String query(Map paramap, HttpServletRequest requset, HttpServletResponse reponse)
-			throws BusinessException;
+	public List<Map<String, ?>> query(Map paramap, HttpServletRequest requset, HttpServletResponse reponse)
+			throws BusinessException {
+		String module = (String) paramap.get(SystemConstans.REQUEST_PARAM_MODULE);
+		String action = (String) paramap.get(SystemConstans.REQUEST_PARAM_ACTION);
+		DBParameter dbparam = F6SystemUtils.buildDBParameter(module, action, paramap);
+		return commonservice.queryMore(dbparam);
+	}
 
 	@RequestMapping(value = DispatherConstant.LOGOUT, method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	public Map logout(HttpServletRequest req, HttpServletResponse res) {
@@ -107,9 +113,9 @@ public abstract class BaseController {
 	public Map login(@RequestBody Map<String, String> param, RedirectAttributes attrs, HttpServletRequest request)
 			throws AuthenticationException, BusinessException {
 		String username = param.get("username");
-		logger.info(username+"------------------Login-----------------------------");
+		logger.info(username + "------------------Login-----------------------------");
 		String password = param.get("userPassword");
-		
+
 		if (F6SystemUtils.isStrNull(username) || F6SystemUtils.isStrNull(password)) {
 			return F6WebUtil.buildResponseMap(SystemConstans.RESPONSE_LABEL_NOAUTH, "", SystemConstans.ERROR_USER_PWD);
 		}

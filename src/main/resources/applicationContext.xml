@@ -23,9 +23,9 @@
 	<!-- load jdbc.properties -->
 	<context:component-scan base-package="com.f6"></context:component-scan>
 
-	
+
 	<context:annotation-config />
-	
+
 	<!-- enable transaction demarcation with annotations -->
 	<context:property-placeholder
 		ignore-unresolvable="true" location="classpath:jdbc.properties" />
@@ -34,11 +34,11 @@
 
 	<context:property-placeholder
 		ignore-unresolvable="true" location="classpath:mail.properties" />
-		<!-- spring session config -->
+	<!-- spring session config -->
 	<bean
 		class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration">
 		<property name="maxInactiveIntervalInSeconds" value="600"></property>
-		</bean>
+	</bean>
 	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig" />
 	<bean id="connectionFactory"
 		class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
@@ -57,7 +57,7 @@
 		<property name="defaultEncoding" value="UTF-8" />
 	</bean>
 
-	
+
 
 	<!-- <bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean"> 
 		<property name="locations"> <list> <value>classpath:qiniu.properties</value> 
@@ -187,6 +187,7 @@
 	<bean id="filter_mainfilter" class="com.f6.filters.MainFilter">
 		<property name="exclusiveurl">
 			<list>
+				<value>/query</value>
 				<value>/secure/login</value>
 				<value>/secure/logout</value>
 				<value>/secure/reg</value>
