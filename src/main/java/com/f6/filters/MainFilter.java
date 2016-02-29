@@ -68,6 +68,15 @@ public class MainFilter implements Filter {
 			String requestURL = requesturl.substring(contextpath.length());
 			logger.info("您正在访问：" + requestURL);
 			if (!exclusiveurl.contains(requestURL)) {
+				//check session
+				String sessionUser = F6WebUtil.getCurrentUser((HttpServletRequest) request);
+				logger.info("session user =====：" + sessionUser);
+				if (F6SystemUtils.isStrNull(sessionUser)) {
+					F6WebUtil.buildErrorResponse((HttpServletResponse) response, SystemConstans.RESPONSE_LABEL_NOLOGIN,
+							SystemConstans.NOT_LOGIN);
+					return;
+				}
+				//check token & role
 				boolean isauthorized = accessAuthenticate((HttpServletRequest) request, functionid);
 				if (!isauthorized) {
 					F6WebUtil.buildErrorResponse((HttpServletResponse) response, SystemConstans.RESPONSE_LABEL_NOAUTH,
@@ -77,7 +86,7 @@ public class MainFilter implements Filter {
 			} else {
 				logger.info(requestURL + "已存在白名单");
 			}
-			//logger.info(contextpath + "===" + requestURL);
+			// logger.info(contextpath + "===" + requestURL);
 
 			chain.doFilter(f6request, response);
 		} catch (Exception e) {
@@ -112,7 +121,7 @@ public class MainFilter implements Filter {
 		Map parametermap4permission = new HashMap();
 		parametermap4permission.put("roleList", roleList);
 
-		DBParameter dbparam4permissoin = F6SystemUtils.buildDBParameter("RoleVO", "selectPermissionsByRoles",
+		DBParameter dbparam4permissoin = F6SystemUtils.buildDBParameter("Role", "selectPermissionsByRoles",
 				parametermap4permission);
 		Map<String, ? extends Object> dbPermissionresultmap = authenService.queryMore(dbparam4permissoin);
 		List<Map<String, ?>> permissionList = (List<Map<String, ?>>) dbPermissionresultmap
@@ -144,20 +153,23 @@ public class MainFilter implements Filter {
 		String[] decoded = F6BusinessUtil.tokenAnalysis(decodedToken);
 		String identificationCode = decoded[0];
 		String requstedToken = decoded[1];
+		// if requested user is different with current session user.
+		String sessionUser = F6WebUtil.getCurrentUser(request);
+		if (!sessionUser.equals(identificationCode)) {
+			return null;
+		}
 
 		Map<String, String> parametermap = new HashMap<String, String>();
 		parametermap.put("identificationCode", identificationCode);
-
-		DBParameter dbparam = F6SystemUtils.buildDBParameter("UserVO", "selectByIdentificationID", parametermap);
-
-		UserVO user = (UserVO) authenService.queryOne(dbparam);
+		DBParameter dbparam = F6SystemUtils.buildDBParameter("User", "selectByIdentificationID", parametermap);
+		Map<String, ?> user = authenService.queryOne(dbparam);
 		if (user == null) {
 			return null;
 		}
-		String pwd = user.getUserPassword();
+		String pwd = (String) user.get("userPassword");
 		String ip = request.getRemoteAddr();
-		String source = identificationCode + pwd + ip;
-		String newToken = PasswordHelper.generateToken(source);
+
+		String newToken = PasswordHelper.generateToken(identificationCode, pwd, ip);
 		if (!requstedToken.equals(newToken)) {
 			return null;
 		}

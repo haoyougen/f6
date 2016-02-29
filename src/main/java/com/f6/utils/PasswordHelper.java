@@ -43,7 +43,8 @@ public class PasswordHelper {
 		return newPassword;
 	}
 
-	public static String generateToken(String source) {
+	public static String generateToken(String userid, String encryptedpwd, String requestIP) {
+		String source=userid + encryptedpwd + requestIP;
 		String token = "";
 		try {
 			token = new SimpleHash(algorithmName, source, SALT, hashIterations).toHex();
@@ -73,9 +74,7 @@ public class PasswordHelper {
 
 	public static void main(String[] args) {
 
-		String token = generateToken("");
-
-		String[] encodeStr = parseTZToken(token);
+	 
 
 	}
 

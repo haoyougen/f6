@@ -1,7 +1,6 @@
 package com.f6.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -144,9 +143,10 @@ public abstract class BaseController {
 		Map<String, String> parametermap = new HashMap<String, String>();
 		parametermap.put("identificationId", username);
 
-		DBParameter dbparam = F6SystemUtils.buildDBParameter("UserVO", "selectByIdentificationID", parametermap);
-
+		DBParameter dbparam = F6SystemUtils.buildDBParameter("User", "selectByIdentificationID", parametermap);
 		Map<String, ?> dbresult = commonservice.queryOne(dbparam);
+
+		// login failed : no user or wrong pwd
 		if (dbresult == null || dbresult.size() == 0) {
 			return F6WebUtil.buildResponseMap(SystemConstans.RESPONSE_LABEL_NOAUTH, "", SystemConstans.ERROR_NO_USER);
 		} else {
@@ -158,22 +158,32 @@ public abstract class BaseController {
 
 		}
 		resultvo = (UserVO) F6SystemUtils.parseMap2Obj(dbresult, UserVO.class.getName());
-
 		resultvo.setUserPassword("");
 
-		String requestIP = request.getRemoteAddr();
-		String token = PasswordHelper.generateToken(username + encryptedpwd + requestIP);
-		resultvo.setToken(token);
-
-		Map<String, String> tokenparam = new HashMap<String, String>();
-		tokenparam.put("identificationId", username);
-		tokenparam.put("token", token);
-
-		DBParameter dbparameter = F6SystemUtils.buildDBParameter("TokenVO", "updateToken", tokenparam);
-		commonservice.change(dbparameter, SystemConstans.CHANGE_ACTION_UPDATE);
-
-		request.getSession().setAttribute(SystemConstans.CURRENT_USER, username);
+		// generate token
+		refreshToken(request, username, resultvo, encryptedpwd);
+		// update current user in session
+		F6WebUtil.setCurrentUser(request, username);
 
 		return F6WebUtil.buildResponseMap(SystemConstans.RESPONSE_LABEL_SUCCESS, resultvo, "");
+	}
+
+	private void refreshSession(HttpServletRequest request, String username) {
+		request.getSession().setAttribute(SystemConstans.CURRENT_USER, username);
+	}
+
+	private void refreshToken(HttpServletRequest request, String username, UserVO resultvo, String encryptedpwd)
+			throws BusinessException {
+		String requestIP = request.getRemoteAddr();
+		String token = PasswordHelper.generateToken(username, encryptedpwd, requestIP);
+		String tokenEncoded = PasswordHelper.encodeStr(username + SystemConstans.SEPERATOR + token);
+		resultvo.setToken(tokenEncoded);
+
+		// update token in db
+		Map<String, String> tokenparam = new HashMap<String, String>();
+		tokenparam.put("identificationId", username);
+		tokenparam.put("token", tokenEncoded);
+		DBParameter dbparameter = F6SystemUtils.buildDBParameter("TokenVO", "updateToken", tokenparam);
+		commonservice.change(dbparameter, SystemConstans.CHANGE_ACTION_UPDATE);
 	}
 }

@@ -81,8 +81,7 @@ public class F6WebUtil {
 		Map response = new LinkedHashMap();
 		response.put("responsecode", successcode);
 		response.put("message", message);
-		
-		
+
 		String classname = data.getClass().getGenericSuperclass().toString();
 		if (classname.indexOf("java.util.AbstractMap") >= 0) {
 			Object resultData = ((Map) data).get(SystemConstans.DB_RESULT_KEY_DATA);
@@ -96,17 +95,17 @@ public class F6WebUtil {
 		}
 		logger.info("classname+++++++++++++++" + classname);
 
-	
 		return response;
 	}
 
-	public static String getCurrentUser() {
-		UserVO user = (UserVO) SecurityUtils.getSubject().getSession().getAttribute(SystemConstans.LOGIN_USER);
-		if (user == null) {
-			return SystemConstans.NULL_USER;
-		}
-		return user.getUserCode();
+	public static String getCurrentUser(HttpServletRequest request) {
+		String username = (String) request.getSession().getAttribute(SystemConstans.CURRENT_USER);
+		return username;
+	}
 
+	public static void setCurrentUser(HttpServletRequest request, String username) {
+		request.getSession().setAttribute(SystemConstans.CURRENT_USER, username);
+		return;
 	}
 
 	public static UserVO getCurrentUserObject() {
