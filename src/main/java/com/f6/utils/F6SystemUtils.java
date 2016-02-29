@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,7 +23,6 @@ import org.apache.commons.codec.binary.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.f6.auth.domain.UserVO;
 import com.f6.vo.DBParameter;
 
 public class F6SystemUtils {
@@ -33,6 +33,11 @@ public class F6SystemUtils {
 			return true;
 		}
 		return false;
+	}
+
+	public static boolean isNum(String str) {
+		boolean isnum = str.matches("\\d+");
+		return isnum;
 	}
 
 	public static String decode(String s) {
@@ -81,12 +86,15 @@ public class F6SystemUtils {
 	}
 
 	public static void main(String[] args) {
-		UserVO user;
-		Map<String, String> usermap = new HashMap<String, String>();
-		usermap.put("userCode", "okok");
-		usermap.put("userName", "myname");
-		user = (UserVO) parseMap2Obj(usermap, UserVO.class.getName());
-		System.out.println(user.toString());
+		// UserVO user;
+		// Map<String, String> usermap = new HashMap<String, String>();
+		// usermap.put("userCode", "okok");
+		// usermap.put("userName", "myname");
+		// user = (UserVO) parseMap2Obj(usermap, UserVO.class.getName());
+		// System.out.println(user.toString());
+
+		System.out.println(isNum("000"));
+		System.out.println(Integer.parseInt("000"));
 
 	}
 
@@ -179,8 +187,33 @@ public class F6SystemUtils {
 		dbparam.setParameter(param);
 		return dbparam;
 	}
-	
-	
-	
-	
+
+	public static Map<String, String> convertObj2Map(Object obj) {
+		Map<String, String> map = new LinkedHashMap<String, String>();
+		Class clazz = obj.getClass();
+		try {
+			Field[] fields = obj.getClass().getDeclaredFields();
+			for (Field field : fields) {
+				String fieldName = field.getName();
+				if("serialVersionUID".equals(fieldName)){
+					continue;
+				}
+				String fieldType = field.getGenericType().toString();
+				logger.info("fieldType"+fieldType);
+				if (fieldType.equals("class java.lang.String")||fieldType.equals("int")||fieldType.equals("long")||fieldType.equals("boolean")) {
+					PropertyDescriptor pd = new PropertyDescriptor(fieldName, clazz);
+					Method readMethod = pd.getReadMethod();
+					String fieldValue = String.valueOf(readMethod.invoke(obj));
+					map.put(fieldName, fieldValue);
+				}
+			}
+		} catch (IntrospectionException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return map;
+	}
+
 }

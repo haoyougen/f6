@@ -54,10 +54,11 @@ public class MainFilter implements Filter {
 		try {
 			F6HttpRequestWrapper f6request = new F6HttpRequestWrapper((HttpServletRequest) request);
 			String functionid = F6WebUtil.getRequestProperty(f6request, SystemConstans.PARAM_FUNCTION_ID);
-	 
+
 			// check function id
 			if (F6SystemUtils.isStrNull(functionid)) {
-				F6WebUtil.buildErrorResponse((HttpServletResponse) response, SystemConstans.RESPONSE_LABEL_NOAUTH, SystemConstans.ERROR_BAD_REQUEST);
+				F6WebUtil.buildErrorResponse((HttpServletResponse) response, SystemConstans.RESPONSE_LABEL_NOAUTH,
+						SystemConstans.ERROR_BAD_REQUEST);
 				return;
 			}
 			//
@@ -69,7 +70,8 @@ public class MainFilter implements Filter {
 			if (!exclusiveurl.contains(requestURL)) {
 				boolean isauthorized = accessAuthenticate((HttpServletRequest) request, functionid);
 				if (!isauthorized) {
-					F6WebUtil.buildErrorResponse((HttpServletResponse) response, SystemConstans.RESPONSE_LABEL_NOAUTH, SystemConstans.ERROR_NOT_AUTH);
+					F6WebUtil.buildErrorResponse((HttpServletResponse) response, SystemConstans.RESPONSE_LABEL_NOAUTH,
+							SystemConstans.ERROR_NOT_AUTH);
 					return;
 				}
 			} else {
@@ -100,17 +102,21 @@ public class MainFilter implements Filter {
 		parametermap.put("identificationCode", identificationCode);
 
 		DBParameter dbparam = F6SystemUtils.buildDBParameter("UserRoleVO", "selectRolesByUserID", parametermap);
+		Map<String, ? extends Object> dbRoleresultmap = authenService.queryMore(dbparam);
+		List<Map<String, ?>> roleList = (List<Map<String, ?>>) dbRoleresultmap.get(SystemConstans.DB_RESULT_KEY_DATA);
 
-		List<Map<String, ?>> roleList = authenService.queryMore(dbparam);
+		// List<Map<String, ?>> roleList = authenService.queryMore(dbparam);
 		if (roleList == null || roleList.size() == 0) {
 			return false;
 		}
 		Map parametermap4permission = new HashMap();
 		parametermap4permission.put("roleList", roleList);
 
-		DBParameter dbparam4permissoin = F6SystemUtils.buildDBParameter("RoleVO", "selectPermissionsByRoles", parametermap4permission);
-
-		List<Map<String, ?>> permissionList = authenService.queryMore(dbparam4permissoin);
+		DBParameter dbparam4permissoin = F6SystemUtils.buildDBParameter("RoleVO", "selectPermissionsByRoles",
+				parametermap4permission);
+		Map<String, ? extends Object> dbPermissionresultmap = authenService.queryMore(dbparam4permissoin);
+		List<Map<String, ?>> permissionList = (List<Map<String, ?>>) dbPermissionresultmap
+				.get(SystemConstans.DB_RESULT_KEY_DATA);
 		if (permissionList == null || permissionList.size() == 0) {
 			return false;
 		} else {

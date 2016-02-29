@@ -5,6 +5,10 @@ import java.util.Map;
 public class DBParameter {
 	private String module;
 	private String action;
+
+	private int page;
+	private int limit;
+
 	private Map<String, Object> parameter;
 
 	public String getModule() {
@@ -13,6 +17,22 @@ public class DBParameter {
 
 	public void setModule(String module) {
 		this.module = module;
+	}
+
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
+
+	public int getLimit() {
+		return limit;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
 	}
 
 	public String getAction() {

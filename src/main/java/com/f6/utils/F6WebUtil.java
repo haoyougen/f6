@@ -80,8 +80,23 @@ public class F6WebUtil {
 	public static Map buildResponseMap(String successcode, Object data, String message) {
 		Map response = new LinkedHashMap();
 		response.put("responsecode", successcode);
-		response.put("data", data);
 		response.put("message", message);
+		
+		
+		String classname = data.getClass().getGenericSuperclass().toString();
+		if (classname.indexOf("java.util.AbstractMap") >= 0) {
+			Object resultData = ((Map) data).get(SystemConstans.DB_RESULT_KEY_DATA);
+			response.put("data", resultData);
+			Object resultPage = ((Map) data).get(SystemConstans.DB_RESULT_KEY_PAGE);
+			if (resultPage != null) {
+				response.put("page", resultPage);
+			}
+		} else {
+			response.put("data", data);
+		}
+		logger.info("classname+++++++++++++++" + classname);
+
+	
 		return response;
 	}
 

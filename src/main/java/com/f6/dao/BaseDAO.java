@@ -4,13 +4,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.f6.exceptions.DAOException;
+import com.f6.utils.F6SystemUtils;
 import com.f6.utils.SystemConstans;
 import com.f6.vo.DBParameter;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 
 public abstract class BaseDAO {
 	@Autowired
@@ -28,11 +30,22 @@ public abstract class BaseDAO {
 
 	}
 
-	public List<Map<String, ?>> queryMore(DBParameter param) throws DAOException {
-		List<Map<String, ?>> result = null;
+	public Map<String, ? extends Object> queryMore(DBParameter param) throws DAOException {
+		Map<String, Object> result = new HashMap<String, Object>();
+		List<Map<String, ?>> dbresult = null;
 		try {
-			result = sqlSessionTemplate.selectList("com.f6.daos." + param.getModule() + "VOMapper." + param.getAction(),
-					param.getParameter(),new RowBounds(2, 3));
+			int page = param.getPage();
+			int limit = param.getLimit();
+			if (page > 0) {
+				PageHelper.startPage(page, limit);
+			}
+			dbresult = sqlSessionTemplate.selectList("com.f6.daos." + param.getModule() + "VOMapper." + param.getAction(),
+					param.getParameter());
+			PageInfo pageinfo = new PageInfo(dbresult);
+
+			result.put(SystemConstans.DB_RESULT_KEY_DATA, dbresult);
+			Map<String, String> pageInfomap = F6SystemUtils.convertObj2Map(pageinfo);
+			result.put(SystemConstans.DB_RESULT_KEY_PAGE, pageInfomap);
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}

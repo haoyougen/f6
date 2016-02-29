@@ -11,7 +11,6 @@ public class SystemConstans {
 	public static final String SYSTEM_ERROR = "系统错误";
 	public static final String ERROR_USER_PWD = "用户名密码错误";
 	public static final String ERROR_NO_USER = "用户名不存在";
-	
 
 	public static final String RESPONSE_LABEL_SUCCESS = "1";
 	public static final String RESPONSE_LABEL_ERROR = "0";
@@ -28,11 +27,15 @@ public class SystemConstans {
 	public static final String CHANGE_ACTION_DELETE = "DELETE";
 	public static final String SEPERATOR = "|";
 	public static final String PARAM_TOKEN = "f6token";
-	
-	
-	public static final String REQUEST_PARAM_MODULE="module";
-	public static final String REQUEST_PARAM_ACTION="action";
-	
-	
-	
+
+	public static final String REQUEST_PARAM_MODULE = "module";
+	public static final String REQUEST_PARAM_ACTION = "action";
+	public static final String REQUEST_PARAM_PAGENO = "page";
+	public static final String REQUEST_PARAM_PAGELIMIT = "limit";
+
+	public static int REQUEST_PARAM_PAGELIMIT_DEFAULT = 10;
+
+	public static final String DB_RESULT_KEY_DATA = "data";
+
+	public static final String DB_RESULT_KEY_PAGE = "page";
 }

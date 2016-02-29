@@ -5,12 +5,13 @@ import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 
-import com.f6.dao.BaseDAO;
 import com.f6.exceptions.DAOException;
 import com.f6.vo.DBParameter;
 
-public class AuthenDAO extends BaseDAO {
-
+public class AuthenDAO  {
+ 
+	protected SqlSessionTemplate sqlSessionTemplate;
+	
 	public Map<String, String> queryOne(DBParameter param) throws DAOException {
 		Map<String, String> result = null;
 		try {
@@ -23,7 +24,7 @@ public class AuthenDAO extends BaseDAO {
 
 	}
 
-	@Override
+ 
 	public List<Map<String, ?>> queryMore(DBParameter param) throws DAOException {
 		List<Map<String, ?>> result = null;
 		try {

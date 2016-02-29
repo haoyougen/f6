@@ -25,8 +25,8 @@ public class CommonService {
 		return result;
 	}
 
-	public List<Map<String, ?>> queryMore(DBParameter dbparam) throws BusinessException {
-		List<Map<String, ?>> result;
+	public  Map<String, ? extends Object> queryMore(DBParameter dbparam) throws BusinessException {
+		 Map<String, ? extends Object> result;
 		try {
 			result = dao.queryMore(dbparam);
 		} catch (Exception e) {
