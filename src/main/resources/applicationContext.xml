@@ -17,7 +17,6 @@
     http://www.springframework.org/schema/aop/spring-aop.xsd
     http://www.springframework.org/schema/jee
     http://www.springframework.org/schema/jee/spring-jee.xsd">
-
 	<!-- open message converter -->
 	<mvc:annotation-driven />
 	<!-- load jdbc.properties -->
@@ -187,7 +186,6 @@
 	<bean id="filter_mainfilter" class="com.f6.filters.MainFilter">
 		<property name="exclusiveurl">
 			<list>
-				<value>/query</value>
 				<value>/secure/login</value>
 				<value>/secure/logout</value>
 				<value>/secure/reg</value>

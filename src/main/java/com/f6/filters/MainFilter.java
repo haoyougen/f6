@@ -77,7 +77,7 @@ public class MainFilter implements Filter {
 			} else {
 				logger.info(requestURL + "已存在白名单");
 			}
-			logger.info(contextpath + "===" + requestURL);
+			//logger.info(contextpath + "===" + requestURL);
 
 			chain.doFilter(f6request, response);
 		} catch (Exception e) {
