@@ -34,10 +34,10 @@ public class CommonService {
 		return result;
 	}
 
-	public Map change(DBParameter dbparam, String changeAction) throws BusinessException {
+	public Map change(DBParameter dbparam) throws BusinessException {
 		Map<String, Object> result;
 		try {
-			result = dao.change(dbparam, changeAction);
+			result = dao.change(dbparam);
 		} catch (Exception e) {
 			throw new BusinessException(e);
 		}

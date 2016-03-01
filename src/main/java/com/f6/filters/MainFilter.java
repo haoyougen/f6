@@ -68,7 +68,7 @@ public class MainFilter implements Filter {
 			String requestURL = requesturl.substring(contextpath.length());
 			logger.info("您正在访问：" + requestURL);
 			if (!exclusiveurl.contains(requestURL)) {
-				//check session
+				// check session
 				String sessionUser = F6WebUtil.getCurrentUser((HttpServletRequest) request);
 				logger.info("session user =====：" + sessionUser);
 				if (F6SystemUtils.isStrNull(sessionUser)) {
@@ -76,7 +76,7 @@ public class MainFilter implements Filter {
 							SystemConstans.NOT_LOGIN);
 					return;
 				}
-				//check token & role
+				// check token & role
 				boolean isauthorized = accessAuthenticate((HttpServletRequest) request, functionid);
 				if (!isauthorized) {
 					F6WebUtil.buildErrorResponse((HttpServletResponse) response, SystemConstans.RESPONSE_LABEL_NOAUTH,
@@ -110,7 +110,10 @@ public class MainFilter implements Filter {
 		Map<String, String> parametermap = new HashMap<String, String>();
 		parametermap.put("identificationCode", identificationCode);
 
-		DBParameter dbparam = F6SystemUtils.buildDBParameter("UserRoleVO", "selectRolesByUserID", parametermap);
+		DBParameter dbparam = F6SystemUtils.buildDBParameter(parametermap);
+		dbparam.setModule("UserRole");
+		dbparam.setAction("selectRolesByUserID");
+
 		Map<String, ? extends Object> dbRoleresultmap = authenService.queryMore(dbparam);
 		List<Map<String, ?>> roleList = (List<Map<String, ?>>) dbRoleresultmap.get(SystemConstans.DB_RESULT_KEY_DATA);
 
@@ -121,8 +124,9 @@ public class MainFilter implements Filter {
 		Map parametermap4permission = new HashMap();
 		parametermap4permission.put("roleList", roleList);
 
-		DBParameter dbparam4permissoin = F6SystemUtils.buildDBParameter("Role", "selectPermissionsByRoles",
-				parametermap4permission);
+		DBParameter dbparam4permissoin = F6SystemUtils.buildDBParameter(parametermap4permission);
+		dbparam.setModule("Role");
+		dbparam.setAction("selectPermissionsByRoles");
 		Map<String, ? extends Object> dbPermissionresultmap = authenService.queryMore(dbparam4permissoin);
 		List<Map<String, ?>> permissionList = (List<Map<String, ?>>) dbPermissionresultmap
 				.get(SystemConstans.DB_RESULT_KEY_DATA);
@@ -161,7 +165,10 @@ public class MainFilter implements Filter {
 
 		Map<String, String> parametermap = new HashMap<String, String>();
 		parametermap.put("identificationCode", identificationCode);
-		DBParameter dbparam = F6SystemUtils.buildDBParameter("User", "selectByIdentificationID", parametermap);
+		DBParameter dbparam = F6SystemUtils.buildDBParameter(parametermap);
+		dbparam.setModule("User");
+		dbparam.setAction("selectByIdentificationID");
+		
 		Map<String, ?> user = authenService.queryOne(dbparam);
 		if (user == null) {
 			return null;

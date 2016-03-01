@@ -180,8 +180,11 @@ public class F6SystemUtils {
 		return obj;
 	}
 
-	public static DBParameter buildDBParameter(String module, String action, Map param) {
+	public static DBParameter buildDBParameter(Map param) {
 		DBParameter dbparam = new DBParameter();
+		String module = (String) param.get(SystemConstans.REQUEST_PARAM_MODULE);
+		String action = (String) param.get(SystemConstans.REQUEST_PARAM_ACTION);
+		
 		dbparam.setModule(module);// "UserVO"
 		dbparam.setAction(action);// "selectByPhoneNo"
 		dbparam.setParameter(param);

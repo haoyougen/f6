@@ -25,6 +25,7 @@ public class SystemConstans {
 	public static final String CHANGE_ACTION_UPDATE = "UPDATE";
 	public static final String CHANGE_ACTION_INSERT = "INSERT";
 	public static final String CHANGE_ACTION_DELETE = "DELETE";
+	
 	public static final String SEPERATOR = "|";
 	public static final String PARAM_TOKEN = "f6token";
 

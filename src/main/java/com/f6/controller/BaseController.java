@@ -21,6 +21,7 @@ import com.f6.exceptions.BadParameterException;
 import com.f6.exceptions.BusinessException;
 import com.f6.service.CommonService;
 import com.f6.utils.DispatherConstant;
+import com.f6.utils.F6BusinessUtil;
 import com.f6.utils.F6SystemUtils;
 import com.f6.utils.F6WebUtil;
 import com.f6.utils.PasswordHelper;
@@ -52,23 +53,70 @@ public abstract class BaseController {
 		return F6WebUtil.buildResponseMap(SystemConstans.RESPONSE_LABEL_SUCCESS, result, "");
 	}
 
-	private void baseValidate(Map paramap) throws BadParameterException {
-		String functionid = (String) paramap.get(SystemConstans.PARAM_FUNCTION_ID);
-		logger.info("*******************BaseController=>******functionid****************************" + functionid);
-		if (F6SystemUtils.isStrNull(functionid)) {
-			throw new BadParameterException("");
-		}
+	@RequestMapping(value = "mquery", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public Map executeMQuery(@RequestBody Map paramap, HttpServletRequest requset, HttpServletResponse response)
+			throws AuthenticationException, BadParameterException, BusinessException {
+		logger.debug("------------------execute----------------------------");
+		baseValidate(paramap);
+		dataValidate(requset, response);
+		authenticate(requset, response);
+		Map result = mquery(paramap, requset, response);
+		postProcess(requset, response);
+		return F6WebUtil.buildResponseMap(SystemConstans.RESPONSE_LABEL_SUCCESS, result, "");
 	}
 
-	public Map query(Map paramap, HttpServletRequest requset, HttpServletResponse reponse) throws BusinessException {
-		String module = (String) paramap.get(SystemConstans.REQUEST_PARAM_MODULE);
-		String action = (String) paramap.get(SystemConstans.REQUEST_PARAM_ACTION);
+	@RequestMapping(value = "change", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public Map executeChange(@RequestBody Map paramap, HttpServletRequest requset, HttpServletResponse response)
+			throws AuthenticationException, BadParameterException, BusinessException {
+		logger.debug("------------------execute----------------------------");
+		baseValidate(paramap);
+		dataValidate(requset, response);
+		authenticate(requset, response);
+
+		DBParameter dbparam = F6SystemUtils.buildDBParameter(paramap);
+		Map result = commonservice.change(dbparam);
+
+		postProcess(requset, response);
+		return F6WebUtil.buildResponseMap(SystemConstans.RESPONSE_LABEL_SUCCESS, result, "");
+	}
+
+	private Map query(Map paramap, HttpServletRequest requset, HttpServletResponse reponse) throws BusinessException {
+
 		// handle the pagination query
+		DBParameter dbparam = processPagination(paramap);
+		Map<String, ? extends Object> result = commonservice.queryMore(dbparam);
+		return result;
+	}
+
+	private Map mquery(Map paramap, HttpServletRequest request, HttpServletResponse reponse) throws BusinessException {
+
+		// handle the pagination query
+
+		DBParameter dbparam = processPagination(paramap);
+		Map<String, ? extends Object> result = F6BusinessUtil.executeComplexLogc(request, dbparam);
+
+		return result;
+	}
+
+	private Map mchange(Map paramap, HttpServletRequest request, HttpServletResponse reponse) throws BusinessException {
+
+		DBParameter dbparam = F6SystemUtils.buildDBParameter(paramap);
+		Map<String, ? extends Object> result = F6BusinessUtil.executeComplexLogc(request, dbparam);
+
+		return result;
+	}
+
+	private DBParameter processPagination(Map paramap) {
 		String pageno = (String) paramap.get(SystemConstans.REQUEST_PARAM_PAGENO);
 		String limit = (String) paramap.get(SystemConstans.REQUEST_PARAM_PAGELIMIT);
 
 		logger.info("pageno:" + pageno + "   limit:" + limit);
-		DBParameter dbparam = F6SystemUtils.buildDBParameter(module, action, paramap);
+		DBParameter dbparam = F6SystemUtils.buildDBParameter(paramap);
+
+		// setting for pagination
+
 		if (!F6SystemUtils.isStrNull(pageno) && F6SystemUtils.isNum(pageno)) {
 			int page = Integer.parseInt(pageno);
 			if (page == 0) {
@@ -83,11 +131,7 @@ public abstract class BaseController {
 			}
 			dbparam.setLimit(limitno);
 		}
-		Map<String, ? extends Object> result = commonservice.queryMore(dbparam);
-		// List<Map<String, ?>> dbdata = (List<Map<String, ?>>)
-		// result.get(SystemConstans.DB_RESULT_KEY_DATA);
-
-		return result;
+		return dbparam;
 	}
 
 	@RequestMapping(value = DispatherConstant.LOGOUT, method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
@@ -116,8 +160,8 @@ public abstract class BaseController {
 
 		param.put("userPassword", PasswordHelper.encryptString(userPassword1));
 
-		DBParameter dbparameter = F6SystemUtils.buildDBParameter("UserVO", "insert", param);
-		Map dbresult = commonservice.change(dbparameter, SystemConstans.CHANGE_ACTION_INSERT);
+		DBParameter dbparameter = F6SystemUtils.buildDBParameter(param);
+		Map dbresult = commonservice.change(dbparameter);
 		dbresult.put("userPassword", "");
 		dbresult.put("userPassword1", "");
 		dbresult.put("userPassword2", "");
@@ -142,8 +186,11 @@ public abstract class BaseController {
 
 		Map<String, String> parametermap = new HashMap<String, String>();
 		parametermap.put("identificationId", username);
+		// "User", "selectByIdentificationID",
+		DBParameter dbparam = F6SystemUtils.buildDBParameter(parametermap);
+		dbparam.setModule("User");
+		dbparam.setAction("selectByIdentificationID");
 
-		DBParameter dbparam = F6SystemUtils.buildDBParameter("User", "selectByIdentificationID", parametermap);
 		Map<String, ?> dbresult = commonservice.queryOne(dbparam);
 
 		// login failed : no user or wrong pwd
@@ -168,10 +215,6 @@ public abstract class BaseController {
 		return F6WebUtil.buildResponseMap(SystemConstans.RESPONSE_LABEL_SUCCESS, resultvo, "");
 	}
 
-	private void refreshSession(HttpServletRequest request, String username) {
-		request.getSession().setAttribute(SystemConstans.CURRENT_USER, username);
-	}
-
 	private void refreshToken(HttpServletRequest request, String username, UserVO resultvo, String encryptedpwd)
 			throws BusinessException {
 		String requestIP = request.getRemoteAddr();
@@ -183,7 +226,18 @@ public abstract class BaseController {
 		Map<String, String> tokenparam = new HashMap<String, String>();
 		tokenparam.put("identificationId", username);
 		tokenparam.put("token", tokenEncoded);
-		DBParameter dbparameter = F6SystemUtils.buildDBParameter("TokenVO", "updateToken", tokenparam);
-		commonservice.change(dbparameter, SystemConstans.CHANGE_ACTION_UPDATE);
+		DBParameter dbparameter = F6SystemUtils.buildDBParameter(tokenparam);
+		// /"TokenVO", "updateToken",
+		dbparameter.setModule("Token");
+		dbparameter.setAction("updateToken");
+		commonservice.change(dbparameter);
+	}
+
+	private void baseValidate(Map paramap) throws BadParameterException {
+		String functionid = (String) paramap.get(SystemConstans.PARAM_FUNCTION_ID);
+		logger.info("*******************BaseController=>******functionid****************************" + functionid);
+		if (F6SystemUtils.isStrNull(functionid)) {
+			throw new BadParameterException("");
+		}
 	}
 }

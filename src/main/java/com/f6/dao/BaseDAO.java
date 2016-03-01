@@ -52,17 +52,21 @@ public abstract class BaseDAO {
 		return result;
 	}
 
-	public Map change(DBParameter param, String changeAction) throws DAOException {
+	public Map change(DBParameter param) throws DAOException {
 		Map<String, Object> result = new HashMap();
 		Object dbreslut = null;
+		String changeAction = param.getAction();
+		if (F6SystemUtils.isStrNull(changeAction)) {
+			throw new DAOException("No Action");
+		}
 		try {
-			if (changeAction.equals(SystemConstans.CHANGE_ACTION_UPDATE)) {
+			if (changeAction.indexOf(SystemConstans.CHANGE_ACTION_UPDATE)>=0) {
 				dbreslut = sqlSessionTemplate.update("com.f6.daos." + param.getModule() + "Mapper." + param.getAction(),
 						param.getParameter());
-			} else if (changeAction.equals(SystemConstans.CHANGE_ACTION_INSERT)) {
+			} else if (changeAction.indexOf(SystemConstans.CHANGE_ACTION_INSERT)>=0) {
 				dbreslut = sqlSessionTemplate.insert("com.f6.daos." + param.getModule() + "Mapper." + param.getAction(),
 						param.getParameter());
-			} else if (changeAction.equals(SystemConstans.CHANGE_ACTION_DELETE)) {
+			} else if (changeAction.indexOf(SystemConstans.CHANGE_ACTION_DELETE)>=0) {
 				dbreslut = sqlSessionTemplate.delete("com.f6.daos." + param.getModule() + "Mapper." + param.getAction(),
 						param.getParameter());
 			}
